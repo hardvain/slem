@@ -52,22 +52,22 @@ class Driver extends SyntaxAnalysis with RegexCompiler[ObrInt] {
      */
     def process (ast : ObrInt, console : Console, emitter : Emitter) : Boolean = 
     {
-		val oldprogram = false
-		val testprog = false
-		val newprog = true
+        val oldprogram = false
+        val testprog = false
+        val newprog = true
 
-		ast->errors
-		if (messagecount > 0) {
-			report
-			false
-		} else {
-			val targettree = ast->code
-			//println(targettree)
-			val e = new IRTreeEncoder(emitter)
-			e.encodeTree(targettree)
-			true
-		}
-		
+        ast->errors
+        if (messagecount > 0) {
+            report
+            false
+        } else {
+            val targettree = ast->code
+            //println(targettree)
+            val e = new IRTreeEncoder(emitter)
+            e.encodeTree(targettree)
+            true
+        }
+        
     }
 }
 
