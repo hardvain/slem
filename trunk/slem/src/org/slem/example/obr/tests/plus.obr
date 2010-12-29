@@ -1,4 +1,0 @@
-PROGRAM X (x : INTEGER; y : INTEGER) : INTEGER;
-BEGIN
-    RETURN x + y;
-END X.
