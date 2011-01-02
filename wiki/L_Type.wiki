@@ -1,4 +1,5 @@
 #summary L_Type Documentation
+#sidebar TableOfContents
 
 = L_Type =
 
