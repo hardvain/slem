@@ -1,4 +1,5 @@
 #summary SLEM LLVM Block documentation.
+#sidebar TableOfContents
 
 = L_Block - LLVM Blocks =
 
