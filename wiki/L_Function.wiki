@@ -1,0 +1,8 @@
+#summary L_Function Documentation
+
+= L_Function =
+{{{
+abstract class L_Function() extends L_Global with L_Value
+}}}
+
+Superclass of all LLVM Functions ([L_FunctionDefinition function definitions]/[L_FunctionDeclaration function declarations]) in SLEM
