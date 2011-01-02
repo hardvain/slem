@@ -1,7 +1,5 @@
-#summary SLEM LLVM Function Definition documentation.
 #sidebar TableOfContents
 
-=L_FunctionDefinition=
 {{{
     ////////////FUNCTION DEFINITIONS////////////
     case class L_FunctionDefinition(
