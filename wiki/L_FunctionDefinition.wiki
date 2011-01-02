@@ -1,6 +1,6 @@
 #summary SLEM LLVM Function Definition documentation.
 
-= L_FunctionDefinition - Function Definitions =
+=L_FunctionDefinition=
 {{{
     ////////////FUNCTION DEFINITIONS////////////
     case class L_FunctionDefinition(
