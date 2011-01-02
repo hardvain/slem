@@ -1,0 +1,8 @@
+#summary L_Instruction Documentation
+
+= L_Instruction =
+{{{
+    abstract class L_Instruction extends L_Node
+}}}
+
+Superclass of all LLVM Instructions in SLEM.
