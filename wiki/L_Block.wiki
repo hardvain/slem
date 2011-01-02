@@ -1,7 +1,6 @@
-#summary SLEM LLVM Block documentation.
 #sidebar TableOfContents
 
-= L_Block - LLVM Blocks =
+= LLVM Blocks =
 
 {{{
 case class L_Block(instructions : List[L_Instruction], terminator : L_TerminatorInstruction, label : L_Label = L_Label("")) extends L_Node
