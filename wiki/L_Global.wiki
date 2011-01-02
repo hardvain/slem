@@ -1,0 +1,7 @@
+#summary L_Global Documentation
+
+= L_Global =
+{{{
+abstract class L_Global extends L_Node
+}}}
+Superclass of all LLVM globals in a LLVM IR program constructed in SLEM. A global can be a [L_GlobalVariable global variable], [L_FunctionDefinition function definition] or [L_FunctionDeclaration function declaration].
