@@ -1,4 +1,5 @@
 #summary L_Program Documentation
+#sidebar TableOfContents
 
 = L_Program =
 {{{
