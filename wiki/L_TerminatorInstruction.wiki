@@ -1,0 +1,7 @@
+#sidebar TableOfContents
+
+{{{
+abstract class L_TerminatorInstruction extends L_Instruction
+}}}
+
+Superclass of all LLVM Terminator Instructions
