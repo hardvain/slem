@@ -1,7 +1,5 @@
-#summary L_Program Documentation
 #sidebar TableOfContents
 
-= L_Program =
 {{{
 case class L_Program(modules : List[L_Module]) extends L_Node 
 }}}
