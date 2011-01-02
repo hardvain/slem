@@ -1,7 +1,5 @@
-#summary L_Global Documentation
 #sidebar TableOfContents
 
-= L_Global =
 {{{
 abstract class L_Global extends L_Node
 }}}
