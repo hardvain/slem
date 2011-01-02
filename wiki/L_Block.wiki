@@ -1,0 +1,38 @@
+#summary SLEM LLVM Block documentation.
+
+= L_Block - LLVM Blocks =
+
+LLVM Blocks are simple to construct in SLEM. All LLVM Blocks _*must*_ have a (possibly empty) list of *instructions*, and a *terminator instruction*.
+
+Slem will automatically generate label names for blocks, but you may choose to set the block label name using the optional parameter "label" if you wish.
+
+
+
+
+===Constructing a very simple block===
+Block in LLVM IR
+{{{
+%0 = add i32 1, 2
+ret %0
+}}}
+Block definition in SLEM
+{{{
+val addInstr = L_Add(1,2)
+val retInstr = L_Ret(addinstr)
+val myBlock = L_Block(List(addInstr), retInstr))
+}}}
+
+===Manually setting a block's label===
+Block in LLVM IR
+{{{
+myblockname:
+  %0 = add i32 1, 2
+  ret %0
+}}}
+Block definition in SLEM
+{{{
+val addInstr = L_Add(1,2)
+val retInstr = L_Ret(addinstr)
+val myBlockLabel : L_Label = "myblockname"
+val myBlock = L_Block(List(addInstr), retInstr), myBlockLabel)
+}}}
