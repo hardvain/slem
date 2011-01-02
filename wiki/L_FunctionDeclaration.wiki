@@ -1,6 +1,6 @@
 #summary SLEM LLVM Function Declaration documentation.
 
-= L_FunctionDeclaration - Function Declarations =
+= L_FunctionDeclaration =
 {{{
     ////////////FUNCTION DECLARATIONS////////////
     case class L_FunctionDeclaration(
