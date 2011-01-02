@@ -5,4 +5,4 @@
 ////////////VALUES////////////
 trait L_Value extends L_Node
 }}}
-Trait possessed by all LLVM "Values". A value in SLEM is anything that can be resolved to a ssa in LLVM - Typically the result returned from an instruction, but can also include functions (for use as a function pointer in instructions that call a function), or global variables.
+Trait possessed by all LLVM "Values". A value in SLEM is anything that can be resolved to a ssa in LLVM - Typically the result returned from an [L_Instruction instruction], but can also include [L_Function functions] (for use as a [L_Function function] pointer in [L_Instruction instructions] that call a [L_Function function]), or [L_GlobalVariable global variables].
