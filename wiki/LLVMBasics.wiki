@@ -4,7 +4,7 @@
 
 A Simplified description of a LLVM IR program is as follows. Further reading of the LLVM Assembly Language Reference Manual is reccomended.
 
-  * A *program* consists of a number of *modules*.
+  * A *[L_Program program]* consists of a number of *[L_Module modules]*.
 Each of these *modules* can contain a number of *global values* and named *metadata* entries.
   * A *global value* can be either a *global variable*, or a *function definition*/*function declaration*.
   * A *function definition* contains a number of *blocks*.
