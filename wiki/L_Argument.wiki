@@ -1,7 +1,6 @@
-#summary L_Argument Documentation
 #sidebar TableOfContents
 
-= L_Argument - Function arguments =
+= Function Arguments =
 {{{
 case class L_Argument(ty : L_Type, value : L_Value = null, attrs : List[String] = List(), argName : String = "") extends L_Node
 }}}
