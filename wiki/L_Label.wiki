@@ -1,4 +1,4 @@
-#summary One-sentence summary of this page.
+#summary L_Label Documentation
 
 = L_Label =
 {{{
@@ -6,4 +6,4 @@
     implicit def stringToLabel(s : String) : L_Label = L_Label(s)
 }}}
 
-Used for creating new [L_Block block] labels in SLEM.
+Can be used to create a new [L_Block block] label in SLEM.
