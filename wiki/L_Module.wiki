@@ -1,7 +1,5 @@
-#summary L_Module Documentation
 #sidebar TableOfContents
 
-= L_Module =
 {{{
 case class L_Module(globals : List[L_Global]) extends L_Node
 }}}
