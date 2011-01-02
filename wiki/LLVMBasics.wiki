@@ -1,0 +1,54 @@
+=Constructing A LLVM IR Program=
+
+=== LLVM Program Basics ===
+
+A Simplified description of a LLVM IR program is as follows. Further reading of the LLVM Assembly Language Reference Manual is reccomended.
+
+  * A *program* consists of a number of *modules*.
+Each of these *modules* can contain a number of *global values* and named *metadata* entries.
+  * A *global value* can be either a *global variable*, or a *function definition*/*function declaration*.
+  * A *function definition* contains a number of *blocks*.
+  * A *block* consists of a number of *instructions*, and a *terminator instruction*.
+
+=== LLVM Example Program ===
+The following program consists of a single *module*, which contains three *global values* - A *global variable*, a *function definition* and a *function declaration*.
+
+The *function definition* contains a single *block*, which in turn contains a single *instruction* (the call to puts), and a *terminator instruction*
+
+{{{
+@.str = private constant [12 x i8] c"Hello World\00", align 1 ;
+
+define i32 @main(i32 %argc, i8** %argv) {
+entry:
+  %0 = i8* getelementptr inbounds [12 x i8]* @.str, i32 0, i32 0
+  %1 = tail call i32 @puts(i8* %0) nounwind ;
+  ret i32 0
+}
+
+declare i32 @puts(i8*)
+}}}
+
+=== Constructing this example program in SLEM ===
+
+{{{
+//Define the string global variable
+val str = L_GlobalVariable(L_String("Hello World\n"))
+
+//Define the puts function declaration
+val putsDeclaration = L_FunctionDeclaration(L_IntType(32), funcName = "puts", arguments = List(L_PointerType(L_IntType(8)))
+
+//Define the main function definition
+val stringPtr = L_GetElementPtr(L_PointerType(IntType(8)), str, List(0,0), inbounds = true)
+val putsCall = L_Call(L_IntType(32), putsDeclaration, List(stringPtr))
+val retZero = L_Ret(0)
+val entryBlock = L_Block(List(stringPtr, putsCall), retZero)
+val mainFunc = L_FunctionDefinition(L_IntType(32), entryBlock)
+
+//Define our (only) module
+val myModule = L_Module(List(str, mainFunc, putsDeclaration))
+
+//Define our program itself
+val myProgram = L_Program(List(myModule))
+
+
+}}}
