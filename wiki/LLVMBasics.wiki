@@ -6,14 +6,14 @@ A Simplified description of a LLVM IR program is as follows. Further reading of 
 
   * A *[L_Program program]* consists of a number of *[L_Module modules]*.
 Each of these *modules* can contain a number of *global values* and named *metadata* entries.
-  * A *[L_GlobalValue global value]* can be either a *[L_GlobalVariable global variable]*, or a *[L_FunctionDefinition function definition]*/*[L_FunctionDeclaration function declaration]*.
+  * A *[L_Global global value]* can be either a *[L_GlobalVariable global variable]*, or a *[L_FunctionDefinition function definition]*/*[L_FunctionDeclaration function declaration]*.
   * A *[L_FunctionDefinition function definition]* contains a number of *[L_Block blocks]*.
-  * A *block* consists of a number of *instructions*, and a *terminator instruction*.
+  * A *[L_Block block]* consists of a number of *[L_Instruction instructions]*, and a *[L_TerminatorInstruction terminator instruction]*.
 
 === LLVM Example Program ===
-The following program consists of a single *module*, which contains three *global values* - A *global variable*, a *function definition* and a *function declaration*.
+The following program consists of a single *[L_Module module]*, which contains three *[L_Global global values]* - A *[L_GlobalVariable global variable]*, a *[L_FunctionDefinition function definition]* and a *[L_FunctionDeclaration function declaration]*.
 
-The *function definition* contains a single *block*, which in turn contains a single *instruction* (the call to puts), and a *terminator instruction*
+The *[L_FunctionDefinition function definition]* contains a single *[L_Block block]*, which in turn contains a single *[L_Instruction instruction]* (the call to puts), and a *[L_TerminatorInstruction terminator instruction]*
 
 {{{
 @.str = private constant [12 x i8] c"Hello World\00", align 1 ;
