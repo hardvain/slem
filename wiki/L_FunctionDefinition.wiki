@@ -1,4 +1,5 @@
 #summary SLEM LLVM Function Definition documentation.
+#sidebar TableOfContents
 
 =L_FunctionDefinition=
 {{{
