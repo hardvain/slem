@@ -1,7 +1,5 @@
-#summary L_GlobalVariable Documentation
 #sidebar TableOfContents
 
-= L_GlobalVariable =
 {{{
     ////////////GLOBAL VARIABLES////////////
     case class L_GlobalVariable(
