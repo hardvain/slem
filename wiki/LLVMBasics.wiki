@@ -38,10 +38,19 @@ declare i32 @puts(i8*)
 val str = L_GlobalVariable(L_String("Hello World\n"))
 
 //Define the puts function declaration
-val putsDeclaration = L_FunctionDeclaration(L_IntType(32), funcName = "puts", arguments = List(L_PointerType(L_IntType(8)))
-
+val putsDeclaration = 
+  L_FunctionDeclaration(
+    L_IntType(32), 
+    funcName = "puts", 
+    arguments = List(L_PointerType(L_IntType(8))
+  )
 //Define the main function definition
-val stringPtr = L_GetElementPtr(L_PointerType(IntType(8)), str, List(0,0), inbounds = true)
+val stringPtr = 
+  L_GetElementPtr(
+    L_PointerType(IntType(8)), 
+    str, 
+    List(0,0), 
+    inbounds = true)
 val putsCall = L_Call(L_IntType(32), putsDeclaration, List(stringPtr))
 val retZero = L_Ret(0)
 val entryBlock = L_Block(List(stringPtr, putsCall), retZero)
