@@ -1,4 +1,5 @@
 #summary L_Argument Documentation
+#sidebar TableOfContents
 
 = L_Argument - Function arguments =
 {{{
