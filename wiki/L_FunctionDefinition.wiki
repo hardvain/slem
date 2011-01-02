@@ -2,7 +2,7 @@
 
 = L_FunctionDefinition - Function Definitions =
 
-A function consists of a number of blocks - [L_Block blocks]
+A function definition consists of a number of blocks - [L_Block blocks]
 
 
 = Details =
