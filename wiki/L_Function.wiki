@@ -1,7 +1,5 @@
-#summary L_Function Documentation
 #sidebar TableOfContents
 
-= L_Function =
 {{{
 abstract class L_Function() extends L_Global with L_Value
 }}}
