@@ -1,7 +1,5 @@
-#summary L_Label Documentation
 #sidebar TableOfContents
 
-= L_Label =
 {{{
     case class L_Label(label : String) extends L_Node
     implicit def stringToLabel(s : String) : L_Label = L_Label(s)
