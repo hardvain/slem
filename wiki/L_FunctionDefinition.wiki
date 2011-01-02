@@ -1,0 +1,13 @@
+#summary SLEM LLVM Function Definition documentation.
+
+= L_FunctionDefinition - Function Definitions =
+
+A function consists of a number of blocks - [L_Block blocks]
+
+
+= Details =
+
+Add your content here.  Format your content with:
+  * Text in *bold* or _italic_
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
