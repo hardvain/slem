@@ -44,6 +44,7 @@ val putsDeclaration =
     funcName = "puts", 
     arguments = List(L_PointerType(L_IntType(8))
   )
+
 //Define the main function definition
 val stringPtr = 
   L_GetElementPtr(
