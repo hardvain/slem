@@ -1,4 +1,5 @@
 #summary Constructing a basic LLVM IR program.
+#sidebar TableOfContents
 
 =Constructing A LLVM IR Program=
 
