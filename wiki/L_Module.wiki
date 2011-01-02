@@ -1,4 +1,5 @@
 #summary L_Module Documentation
+#sidebar TableOfContents
 
 = L_Module =
 {{{
