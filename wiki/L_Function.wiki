@@ -1,4 +1,5 @@
 #summary L_Function Documentation
+#sidebar TableOfContents
 
 = L_Function =
 {{{
