@@ -1,4 +1,5 @@
 #summary L_Value Documentation
+#sidebar TableOfContents
 
 = L_Value =
 {{{
