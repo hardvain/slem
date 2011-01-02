@@ -12,3 +12,5 @@
     * [L_Block Blocks]
     * [L_Instruction Instructions]
     * [L_TerminatorInstruction Terminator Instructions]
+    * [L_Type Types]
+    * [L_Constant Constants]
