@@ -4,4 +4,4 @@
 abstract class L_TerminatorInstruction extends L_Instruction
 }}}
 
-Superclass of all LLVM Terminator Instructions
+Superclass of all LLVM Terminator Instructions in SLEM
