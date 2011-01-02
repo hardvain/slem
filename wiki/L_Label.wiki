@@ -1,4 +1,5 @@
 #summary L_Label Documentation
+#sidebar TableOfContents
 
 = L_Label =
 {{{
