@@ -1,7 +1,5 @@
-#summary L_Instruction Documentation
 #sidebar TableOfContents
 
-= L_Instruction =
 {{{
 abstract class L_Instruction extends L_Node
 }}}
