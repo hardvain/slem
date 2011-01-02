@@ -1,0 +1,5 @@
+#summary L_Type Documentation
+
+= L_Type =
+
+Superclass of all LLVM types in SLEM.
