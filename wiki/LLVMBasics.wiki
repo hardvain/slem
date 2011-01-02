@@ -50,7 +50,8 @@ val stringPtr =
     L_PointerType(IntType(8)), 
     str, 
     List(0,0), 
-    inbounds = true)
+    inbounds = true
+  )
 val putsCall = L_Call(L_IntType(32), putsDeclaration, List(stringPtr))
 val retZero = L_Ret(0)
 val entryBlock = L_Block(List(stringPtr, putsCall), retZero)
