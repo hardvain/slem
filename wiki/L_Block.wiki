@@ -1,5 +1,9 @@
 #summary SLEM LLVM Block documentation.
 
+{{{
+case class L_Block(instructions : List[L_Instruction], terminator : L_TerminatorInstruction, label : L_Label = L_Label("")) extends L_Node
+}}}
+
 = L_Block - LLVM Blocks =
 
 LLVM Blocks are simple to construct in SLEM. All LLVM Blocks _*must*_ have a (possibly empty) list of *instructions*, and a *terminator instruction*.
