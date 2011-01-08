@@ -35,7 +35,7 @@ trait SyntaxAnalysis extends RegexParsers with PackratParsers {
 
     lazy val program : PackratParser[ObrInt] =
         ("PROGRAM" ~> ident) ~
-        ("(" ~> rep1sep (parameterdecl, ";") <~ ")" <~ ":" <~ "INTEGER" <~ ";") ~
+        ("(" ~> repsep (parameterdecl, ";") <~ ")" <~ ":" <~ "INTEGER" <~ ";") ~ //This is a hack
         declarations ~
         ("BEGIN" ~> statementseq <~ "END") ~
         (ident <~ ".") ^^

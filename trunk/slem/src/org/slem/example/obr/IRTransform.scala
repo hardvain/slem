@@ -36,46 +36,61 @@ object IRTransform {
     var currentBlockInstructions : List[L_Instruction] = List()
     var currentBlockLabel = L_Label("entry")
     
+    val argc = L_Argument(L_IntType(32), argName = "argc")
+    val argv = L_Argument(L_PointerType(L_PointerType(L_IntType(8))), argName = "argv")
+    
+    var nextParamIndex = 0
+    
+    def getNextParamIndex() : Int =
+    {
+        nextParamIndex = nextParamIndex + 1
+        nextParamIndex
+    }
+    
     val code : ObrInt ==> L_Program = 
     {
         case ObrInt (_, decls, stmts, _) =>
         {
+            resetMacros()
             valuemap = HashMap[String, L_Value] ()
-            val params = getParameters(decls) //Get the list of parameter declarations 
-                                              //so we can use them in the main function/wrapper function
-
-            var obrFuncRef = L_FunctionReference()
-            val atoiFunc = L_FunctionDeclaration(
-                L_IntType(32), 
-                arguments = List(L_PointerType(L_IntType(8))), 
-                funcName = "atoi"
-            )
+            nextParamIndex = 0
+            val numParams = decls.filter(d=>
+                d match
+                {
+                    case p : IntParam => true
+                    case _ => false
+                }
+            ).size
             
-            val printfFunc = L_FunctionDeclaration(
-                L_IntType(32),
-                arguments = List(L_PointerType(L_IntType(8)), L_VarArgsType()),
-                funcName = "printf"
+            //Check argument count to match number of inputs.
+            blockList = List()
+            currentBlockLabel = L_Label("entry")
+            currentBlockInstructions = List()
+            val comp = L_ICmpSLT(argc, numParams + 1)
+            addInstruction(comp)
+            val obrEntryLabel = L_Label("obrentry")
+            val argumentFailureExitLabel = L_Label("argfailure")
+            val testbr = L_BrCond(comp, argumentFailureExitLabel, obrEntryLabel)
+            addInstruction(testbr)
             
-            )
-                        
-            val pstring = L_GlobalVariable(L_String("%d\\0A\\00"), linkage = "private", isConstant = true, alignment = 1)
+            //build argument count failure routine
+            currentBlockLabel = argumentFailureExitLabel
+            val errorPrintMacro = List() //TODO
+            addInstructions(errorPrintMacro ::: List(L_Ret(0)))
             
-            val wrapper = generateWrapper(params, obrFuncRef, atoiFunc, printfFunc, pstring)
-            val obrArgs = getArgumentsFromParams(params)
-
-            val obrBlocks = codeProgram(decls, stmts)
-            val obrFunc = L_FunctionDefinition(L_IntType(32), obrBlocks, funcName = "obr", arguments = obrArgs)
-            obrFuncRef.funcPtr = obrFunc
-            val mainmodule = L_Module(List(obrFuncRef, wrapper, atoiFunc, printfFunc, pstring))
+            //build main program
+            currentBlockLabel = obrEntryLabel
+            codeProgram(decls,stmts)
+            val obrArgs = List(argc, argv)
+            val obrFunc = L_FunctionDefinition(L_IntType(32), blockList, funcName = "main", arguments = obrArgs)
+            val mainmodule = L_Module(List(obrFunc) ::: imports)
             L_Program(List(mainmodule))
         }
     }
     
     private def codeProgram(decls : List[Declaration], stmts : List[Statement]) : List[L_Block] =
     {
-        blockList = List()
-        currentBlockLabel = L_Label("entry")
-        currentBlockInstructions = List()
+
         for(d<-decls)
         {
             addInstructions(codeDeclaration(d))
@@ -134,10 +149,20 @@ object IRTransform {
             //Feed the value of the intparam into a new allocation
             case IntParam(idn) =>
             {
+                val getParamValue = L_Macro_GetIntArgument(argv, getNextParamIndex())
                 val allocation = L_Alloca(L_IntType(32))
-                val storage = L_Store(valuemap(idn), allocation)
-                valuemap(idn) = allocation
-                List(allocation, storage)
+                val pvalue = getParamValue.last
+                pvalue match
+                {
+                    case n : L_Value =>
+                    {
+                        val storage = L_Store(n, allocation)
+                        valuemap(idn) = allocation
+                        getParamValue ::: List(allocation, storage)                    
+                    }
+                    case _ => List()
+                }
+
             }
             
             //Handle a boolean variable declaration
@@ -341,8 +366,10 @@ object IRTransform {
             case ReturnStmt(expr) =>
             {
                 val expValue = codeExpression(expr)
+                val returnPrintStmt = L_Macro_PrintLine(expValue)
                 val ret = L_Ret(expValue)
-                addInstruction(ret)
+                
+                addInstructions(returnPrintStmt ::: List(ret))
             }
             case WhileStmt(cond, body) =>
             {
@@ -537,76 +564,6 @@ object IRTransform {
             }
             case _                   => null 
         }
-    }
-    
-    private def getArgumentsFromParams(decls : List[Declaration]) : List[L_Argument] =
-    {
-        var args : List[L_Argument] = List()
-        for(d<-decls)
-        {
-            d match
-            {
-                case p : IntParam =>
-                {
-                    val newArg = L_Argument(L_IntType(32))
-                    valuemap(p.idn) = newArg
-                    args = args ::: List(newArg)
-                }
-                case _ =>
-            }
-        }
-        args
-    }
-
-    private def getParameters(decls : List[Declaration], paramlist : List[Declaration] = List()) : List[Declaration] =
-    {
-        if(decls.size > 0)
-        {
-            decls.head match
-            {
-                case d : IntParam => getParameters(decls.tail, paramlist ::: List(decls.head))
-                case _ => getParameters(decls.tail, paramlist)
-            }
-        }
-        else
-        {
-            paramlist
-        }
-    }
-    
-    private def generateWrapper(decls : List[Declaration], obrfunc : L_Function, atoiFunc : L_FunctionDeclaration, printfFunc : L_FunctionDeclaration, pstring : L_GlobalVariable) : L_FunctionDefinition = 
-    {
-        val params = getParameters(decls)
-        // Get the list of parameter declarations so we can read them from the arguments here.
-        
-        var instrs : List[L_Instruction] = List()
-        var paramvalues : List[L_Argument] = List()
-        val argc = L_Argument(L_IntType(32), argName = "argc")
-        val argv = L_Argument(L_PointerType(L_PointerType(L_IntType(8))), argName = "argv")
-        var idx = 1
-        for(p<-params)
-        {
-            val arglocptr = L_GetElementPtr(L_PointerType(L_PointerType(L_IntType(8))), argv, List(idx), inBounds = true)
-            val argloc = L_Load(L_PointerType(L_IntType(8)), arglocptr, alignment = 8)
-            val argval  = L_Call(L_IntType(32), atoiFunc, List(argloc))
-            val argval_Arg : L_Argument = argval
-            instrs = instrs ::: List(arglocptr)
-            instrs = instrs ::: List(argloc)
-            instrs = instrs ::: List(argval)
-            paramvalues = paramvalues ::: List(argval_Arg)
-            idx = idx + 1
-        }
-        val obrcall = L_Call(L_IntType(32), obrfunc, paramvalues)
-        
-        val printfGetPtr = L_GetElementPtr(L_PointerType(pstring->resultType), pstring, List(0,0))
-        //val printfGetPtr = L_GetElementPtr(L_PointerType(L_PointerType(L_IntType(8))), pstring, List(0,0))
-        val printfCall = L_Call(L_IntType(32), printfFunc, List(printfGetPtr, obrcall))
-        instrs = instrs ::: List(obrcall, printfGetPtr, printfCall)
-        
-        val terminator = L_Ret(obrcall)
-        val block = L_Block(instrs, terminator, "entry")
-        
-        L_FunctionDefinition(L_IntType(32), List(block), arguments = List(argc, argv), funcName = "main")
     }
 }
     

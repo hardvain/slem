@@ -141,8 +141,20 @@ object IRTree {
     
     ////////////SIMPLE CONSTANT VALUES////////////
     case class L_Boolean(value : Boolean) extends L_Constant
+
     
     case class L_Int(size : Int, value : Long) extends L_Constant
+    implicit def boolToConst(b : Boolean) : L_Int =
+    {
+        if(b)
+        {
+            L_Int(1, 1)
+        }
+        else
+        {
+            L_Int(1, 0)
+        }
+    }
     implicit def intToConst(i : Int) : L_Int = L_Int(32, i)
     implicit def longToConst(l : Long) : L_Int = L_Int(64, l)
 
@@ -153,6 +165,8 @@ object IRTree {
     implicit def doubltToConst(d : Double) : L_Double = L_Double("" + d)
     
     case class L_NullPointer(pty : L_Type) extends L_Constant
+    
+    case class L_Void() extends L_Constant
     
     ////////////COMPLEX CONSTANT VALUES////////////
     case class L_Structure(elements : List[L_Value]) extends L_Constant
@@ -712,6 +726,7 @@ object IRTree {
             case n : L_Float          => L_FloatType()
             case n : L_Double         => L_DoubleType()
             case n : L_NullPointer    => n.pty
+            case n : L_Void           => L_VoidType()
             
             //COMPLEX CONSTANTS
             case n : L_Structure      => L_StructureType(n.elements.map(e => e->resultType))
