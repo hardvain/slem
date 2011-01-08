@@ -267,6 +267,9 @@ class IRTreeEncoder(emitter : Emitter)
             {
                 emit("null")
             }
+            case n : L_Void =>
+            {
+            }
             //Complex Constants
             case n : L_Structure =>
             {
@@ -677,9 +680,9 @@ class IRTreeEncoder(emitter : Emitter)
                 encodeType(n.value->resultType)
                 emit(" ")
                 encodeValue(n.value)
-                emit(" label %")
+                emit(", label %")
                 encodeLabel(n.default)
-                emit("[ ")
+                emit(" [ ")
                 for(valLab<-n.cases)
                 {
                     encodeType(valLab.value->resultType)
@@ -687,8 +690,9 @@ class IRTreeEncoder(emitter : Emitter)
                     encodeValue(valLab.value)
                     emit(", label %")
                     encodeLabel(valLab.label)
+                    emit(" ")
                 }
-                emit(" ]")
+                emit("]")
             }
             case n : L_IndirectBr =>
             {
@@ -696,13 +700,20 @@ class IRTreeEncoder(emitter : Emitter)
                 encodeType(n.address->resultType)
                 emit("* ")
                 encodeValue(n.address)
-                emit(", [")
+                emit(", [ ")
+                var labidx = 0
                 for(lab<-n.possibleDestinations)
                 {
                     emit("label %")
                     encodeLabel(lab)
+                    if(labidx < n.possibleDestinations.size - 1)
+                    {
+                        emit(",")
+                    }
+                    emit(" ")
+                    labidx = labidx + 1
                 }
-                emit(" ]")
+                emit("]")
             }
             case n : L_Invoke =>
             {

@@ -29,15 +29,17 @@ object IRTreeFactory {
     var printline_int_str : L_GlobalVariable = null
     var print_int_str : L_GlobalVariable = null
     var printf_int : L_FunctionDeclaration = null
+    var atoiFunc : L_FunctionDeclaration = null
     
     var imports : List[L_Global] = List()
     
     
-    def reset() = 
+    def resetMacros() = 
     {
         printline_int_str = null
         print_int_str = null
         printf_int = null
+        atoiFunc = null
         imports = List()
     }
     
@@ -50,7 +52,14 @@ object IRTreeFactory {
     private def print_int_str_definition() : L_GlobalVariable = L_GlobalVariable(L_String("%d\\00"), linkage = "private", isConstant = true, alignment = 1)
     
 
-    
+    private def atoiFunc_definition() : L_FunctionDeclaration =
+    {
+        L_FunctionDeclaration(
+            L_IntType(32), 
+            arguments = List(L_PointerType(L_IntType(8))), 
+            funcName = "atoi"
+        )
+    }
     private def printf_int_definition() : L_FunctionDeclaration = 
     {
         L_FunctionDeclaration(
@@ -59,6 +68,7 @@ object IRTreeFactory {
             funcName = "printf"
         )
     }
+
     private def import_printline_int_str() = 
     {
         if(printline_int_str == null)
@@ -86,8 +96,17 @@ object IRTreeFactory {
         }
     }
     
+    private def import_atoi() =
+    {
+        if(atoiFunc == null)
+        {
+            atoiFunc = atoiFunc_definition()
+            imports = imports ::: List(atoiFunc)
+        }
+    }
+    
     //prints an i32 to std out + a line break
-    def L_Macro_PrintLine(value : L_Int) : List[L_Instruction] = 
+    def L_Macro_PrintLine(value : L_Value) : List[L_Instruction] = 
     {
         import_printline_int_str()
         import_printf_int()
@@ -97,13 +116,39 @@ object IRTreeFactory {
     }    
     
     //prints an i32 to std out (no line break)
-    def L_Macro_Print(value : L_Int) : List[L_Instruction] = 
+    def L_Macro_Print(value : L_Value) : List[L_Instruction] = 
     {
         import_print_int_str()
         import_printf_int()
         val printfGetPtr = L_GetElementPtr(L_PointerType(print_int_str->resultType), print_int_str, List(0,0))
         val printfCall = L_Call(L_IntType(32), printf_int, List(printfGetPtr, value))
         List(printfGetPtr, printfCall)
+    }
+    
+    //gets a string from a main argv
+    def L_Macro_GetArgument(argv : L_Value, idx : L_Value) : List[L_Instruction] =
+    {
+        val arglocptr = L_GetElementPtr(L_PointerType(L_PointerType(L_IntType(8))), argv, List(idx), inBounds = true)
+        val argloc = L_Load(L_PointerType(L_IntType(8)), arglocptr, alignment = 8)
+        List(arglocptr, argloc)
+    }
+    
+    //gets a string from a main argv and performs atoi on it
+    def L_Macro_GetIntArgument(argv : L_Value, idx : L_Value) : List[L_Instruction] =
+    {
+        import_atoi()
+        val getarg = L_Macro_GetArgument(argv, idx)
+        val argloc = getarg.last
+        argloc match
+        {
+            case n : L_Value =>
+            {
+                    val argval  = L_Call(L_IntType(32), atoiFunc, List(n))
+                    getarg ::: List(argval)
+            }
+            case _ => getarg
+        }
+        
     }
     
     ///////////////////////////////

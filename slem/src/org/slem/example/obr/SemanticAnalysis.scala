@@ -160,7 +160,18 @@ object SemanticAnalysis {
      */
     val env : ObrNode ==> Environment =
         attr {
-            case ObrInt (_, ds, ss, _)          => (ds.last)->envout
+            case ObrInt (_, ds, ss, _)          => 
+            {
+                if(ds.size > 0)
+                {
+                    (ds.last)->envout
+                }
+                else
+                {
+                    Map()
+                }
+                
+            }
             case d : Declaration if (d.isFirst) => Map ()
             case d : Declaration                => (d.prev[Declaration])->envout
             case n                              => (n.parent[ObrNode])->env
