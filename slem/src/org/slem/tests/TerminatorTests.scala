@@ -37,36 +37,6 @@ class TerminatorSpec extends Spec {
 		e.result
     }
 	
-	/*
-	describe("BinOp - Type Inference: ") {
-	    it("L_IntType") {
-			expect("i32")
-			{
-				typeTest(L_Add(1,2))
-			}
-		}
-		it("L_FloatType") {
-			expect("float")
-			{
-				typeTest(L_Add(L_Float("1.0"), L_Float("2.0")))
-			}
-		}
-		it("L_DoubleType") {
-			expect("double")
-			{
-				typeTest(L_Add(L_Double("1.0"), L_Double("2.0")))
-			}
-		}
-        it("L_VectorType") {
-            expect("<3 x i32>")
-			{
-				val vec1 = L_Vector(List(0,1,2))
-				val vec2 = L_Vector(List(3,4,5))
-			    typeTest(L_Add(vec1, vec2))
-			}
-		}
-	}
-    */
     describe("Terminator - Ret: ") {
  
       it("L_Ret - Basic") {
