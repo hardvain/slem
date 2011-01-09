@@ -285,6 +285,7 @@ class IRTreeEncoder(emitter : Emitter)
                     {
                         emit(", ")
                     }
+                    i = i + 1
                 }
                 emit(" }")
             }
@@ -317,16 +318,17 @@ class IRTreeEncoder(emitter : Emitter)
             {
                 emit("< ")
                 var imax = n.elements.size
-                var i = 1
+                var i = 0
                 for(e<-n.elements)
                 {
                     encodeType(e->resultType)
                     emit(" ")
                     encodeValue(e)
-                    if(i < imax)
+                    if(i < imax - 1)
                     {
                         emit(", ")
                     }
+                    i = i + 1
                 }
                 emit(" >")
             }
@@ -380,7 +382,8 @@ class IRTreeEncoder(emitter : Emitter)
                 emit(" ")
                 encodeValue(n.vec)
                 emit(", i32 ")
-                emit("" + n.idx)
+                emit("")
+                encodeValue(n.idx)
             }
             case n : L_InsertElement =>
             {
@@ -422,6 +425,8 @@ class IRTreeEncoder(emitter : Emitter)
                 for(idx<-n.indexes)
                 {
                     emit(", ")
+                    encodeType(idx->resultType)
+                    emit(" ")
                     encodeValue(idx)
                 }
             }
@@ -917,11 +922,11 @@ class IRTreeEncoder(emitter : Emitter)
             {
                 emit("{ ")
                 var imax = n.fields.size
-                var i = 1
+                var i = 0
                 for(field<-n.fields)
                 {
                     encodeType(field)
-                    if(i < imax)
+                    if(i < imax - 1)
                     {
                         emit(", ")
                     }
