@@ -331,104 +331,13 @@ object IRTree {
     
     
     ////////////MEMORY INSTRUCTIONS////////////
-    case class L_Alloca(typ : L_Type, numElementsType : L_Type = null, numElements : L_Value = null, alignment : Long = 0) extends L_Instruction with L_Value
-    {
-        val hasNumElements = (numElementsType != null)
-        val hasAlign = (alignment != 0)
-
-        /*
-        
-        Deprecated - subject to further testing
-        
-        var hasNumElements = true
-        var hasAlign = true
-        def this(typeIn : L_Type)
-        {
-            this(typeIn, null, null, 0)
-            hasNumElements = false
-            hasAlign = false
-        }
-        def this(typeIn : L_Type, numElementsTypeIn : L_Type, numElementsIn : L_Value)
-        {
-            this(typeIn, numElementsTypeIn, numElementsIn, 0)
-            hasNumElements = true
-            hasAlign = false	
-        }
-        def this(typeIn : L_Type, alignmentIn : Long)
-        {
-            this(typeIn, null, null, alignmentIn)
-            hasNumElements = false
-            hasAlign = true	
-        }	
-        */		
-    }
+    case class L_Alloca(typ : L_Type, numElements : L_Value = null, alignment : Long = 0) extends L_Instruction with L_Value
 
     //TODO : need to implement metadata in order to make this fully functional.
     case class L_Load(typ : L_Type, pointer : L_Value, isVolatile : Boolean = false, alignment : Long = 0, nonTemporal : Boolean = false, nonTempIndex : Long = 0) extends L_Instruction with L_Value
-    {
-        val hasAlign = (alignment != 0)
-    /*
-        //Deprecated - subject to further testing
-        var hasAlign = true
-        var hasNonTempIndex = true
-        def this(typeIn : L_Type, pointerIn : L_Value)
-        {
-            this(false, typeIn, pointerIn, 0, 0)
-            hasAlign = false
-            hasNonTempIndex = false
-        }
-        def this(volatileIn : Boolean, typeIn : L_Type, pointerIn : L_Value)
-        {
-            this(volatileIn, typeIn, pointerIn, 0, 0)
-            hasAlign = false
-            hasNonTempIndex = false		
-        }
-        def setAlignment(alignIn : Long)
-        {
-            hasAlign = true
-            alignment = alignIn
-        }
-        def setNonTempIndex(indexIn : Long)
-        {
-            hasNonTempIndex = true
-            nonTempIndex = indexIn
-        }
-    */	
-    }
 
     //TODO : need to implement metadata in order to make this fully functional.
     case class L_Store(value : L_Value, pointer : L_Value, isVolatile : Boolean = false, alignment : Long = 0, nonTemporal : Boolean = false, nonTempIndex : Long = 0) extends L_Instruction
-    {
-        val hasAlign = (alignment != 0)
-    /*
-        //Deprecated - subject to further testing 
-        
-        var hasAlign = true
-        var hasNonTempIndex = true
-        def this(valueIn : L_Value, pointerIn : L_Value)
-        {
-            this(false, valueIn, pointerIn, 0, 0)
-            hasAlign = false
-            hasNonTempIndex = false
-        }
-        def this(volatileIn : Boolean, valueIn : L_Value , pointerIn : L_Value)
-        {
-            this(volatileIn, valueIn, pointerIn, 0, 0)
-            hasAlign = false
-            hasNonTempIndex = false		
-        }
-        def setAlignment(alignIn : Long)
-        {
-            hasAlign = true
-            alignment = alignIn
-        }
-        def setNonTempIndex(indexIn : Long)
-        {
-            hasNonTempIndex = true
-            nonTempIndex = indexIn
-        }
-    */
-    }
     
     case class L_TypeIndex(ty : L_Type, idx : L_Value) extends L_Node
     implicit def longToTypeIndex(l : Long) : L_TypeIndex = L_TypeIndex(L_IntType(64), l)
@@ -688,11 +597,11 @@ object IRTree {
     case class L_IndirectBr(address : L_Value, possibleDestinations : List[L_Label]) extends L_TerminatorInstruction
     
     case class L_Invoke(
-        funcTypePtr : L_Type,      //TODO : This could be a pointer? investigate
         funcPtrVal : L_Value,      
         args : List[L_Argument],
         normal : L_Label,
         unwind : L_Label,
+        funcTypePtr : L_Type = null,      //This is a function pointer type where there is ambiguity - such as varargs fns.
         callConv : String = "",               //Optional
         retAttrs : List[String] = List(),     //Optional
         attrs : List[String] = List()         //Optional
@@ -720,6 +629,26 @@ object IRTree {
     val resultType : L_Node ==> L_Type = 
     {
         attr {
+            //FUNCTION DECLARATIONS
+            case n : L_FunctionDeclaration => //n.returnType //TODO: support varags signature types
+            {
+                var argTypes : List[L_Type] = List()
+                for(a <- n.arguments)
+                {
+                    argTypes = argTypes ::: List(a.ty) 
+                }
+                L_PointerType(L_FunctionType(n.returnType, argTypes))
+            }
+            case n : L_FunctionDefinition => //n.returnType
+            {
+                var argTypes : List[L_Type] = List()
+                for(a <- n.arguments)
+                {
+                    argTypes = argTypes ::: List(a.ty) 
+                }
+                L_PointerType(L_FunctionType(n.returnType, argTypes))            
+            }
+        
             //SIMPLE CONSTANTS
             case n : L_Boolean        => L_IntType(1)
             case n : L_Int            => L_IntType(n.size)
@@ -767,7 +696,17 @@ object IRTree {
             
             //MEMORY INSTRUCTIONS
             case n : L_Alloca         => L_PointerType(n.typ) //TODO: FIX THIS!!! Assumes that all stack memory locations are in 32 bits
-            case n : L_Load           => (n.typ)
+            case n : L_Load           => 
+            {
+                (n.typ) match
+                {
+                    case p : L_PointerType => p.pointer
+                    case _ => 
+                    {
+                        L_VoidType() //Error
+                    }
+                }
+            }
             case n : L_GetElementPtr  => //TODO : Fix
             {
                 /*
