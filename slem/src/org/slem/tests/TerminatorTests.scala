@@ -129,8 +129,37 @@ class TerminatorSpec extends Spec {
     }
     
     describe("Terminator - Invoke: ") {
-    
-    } //TODO
+      it("L_Invoke - Simple")
+      {
+        expect("%0 = invoke i32( i32 )* @myfunc( i32 1 ) to label %moo unwind label %blah")
+        {
+          val myfunc = L_FunctionDeclaration(L_IntType(32), funcName = "myfunc", arguments = List(L_IntType(32)))
+          emitTest(L_Invoke(myfunc, List(L_Int(32, 1)), "moo", "blah"))
+        }
+      }
+      
+      it("L_Invoke - Fn Ptr")
+      {
+        expect("%0 = invoke i8( i32 )* %1( i32 1 ) to label %moo unwind label %blah")
+        {
+          val myfunc = L_FunctionDeclaration(L_IntType(8), funcName = "myfunc", arguments = List(L_IntType(32)))
+          val myfuncPtrAlloca = L_Alloca(L_PointerType(myfunc->resultType))
+          val myfuncPtrStor = L_Store(myfunc, myfuncPtrAlloca)
+          val myfuncPtrLoad = L_Load(L_PointerType(myfunc->resultType), myfuncPtrAlloca)
+          emitTest(L_Invoke(myfuncPtrLoad, List(L_Int(32, 1)), "moo", "blah"))
+        }
+      }
+      
+      it("L_Invoke - All invoke variables")
+      {
+        expect("%0 = invoke cconvtest retattrstest retattrstest2 i32( i32 )* @myfunc( i32 1 ) attrstest attrstest2 to label %moo unwind label %blah")
+        {
+          val myfunc = L_FunctionDeclaration(L_IntType(32), funcName = "myfunc", arguments = List(L_IntType(32)))
+          emitTest(L_Invoke(myfunc, List(L_Int(32, 1)), "moo", "blah", callConv = "cconvtest", retAttrs = List("retattrstest", "retattrstest2"), attrs = List("attrstest", "attrstest2")))
+        }      
+      }
+      
+    }
     
     describe("Terminator - Unwind: ") {
       it("L_Unwind")
