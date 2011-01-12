@@ -725,7 +725,7 @@ object IRTree {
             case n : L_Int            => L_IntType(n.size)
             case n : L_Float          => L_FloatType()
             case n : L_Double         => L_DoubleType()
-            case n : L_NullPointer    => n.pty
+            case n : L_NullPointer    => L_PointerType(n.pty)
             case n : L_Void           => L_VoidType()
             
             //COMPLEX CONSTANTS
