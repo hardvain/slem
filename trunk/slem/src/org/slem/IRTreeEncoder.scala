@@ -703,7 +703,7 @@ class IRTreeEncoder(emitter : Emitter)
             {
                 emitw("indirectbr")
                 encodeType(n.address->resultType)
-                emit("* ")
+                emit(" ")
                 encodeValue(n.address)
                 emit(", [ ")
                 var labidx = 0
