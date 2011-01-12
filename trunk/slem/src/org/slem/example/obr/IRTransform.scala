@@ -271,7 +271,7 @@ object IRTransform {
                 //a new SSA called currentindexval
                 var ptr1 = valuemap(idn)
                 
-                val currentIndexVal = L_Load(L_IntType(32), ptr1)
+                val currentIndexVal = L_Load(L_PointerType(L_IntType(32)), ptr1)
                 addInstruction(currentIndexVal)
                 
                 
@@ -295,7 +295,7 @@ object IRTransform {
                 
                 //Increment the loop index
                 var ptr2 = valuemap(idn)
-                val oldIndexVal = L_Load(L_IntType(32), ptr2)
+                val oldIndexVal = L_Load(L_PointerType(L_IntType(32)), ptr2)
                 val newIndexVal = L_Add(oldIndexVal, 1)
                 val storeNewIndex = L_Store(newIndexVal, ptr2)
                 addInstructions(List(oldIndexVal, newIndexVal, storeNewIndex))
@@ -460,7 +460,7 @@ object IRTransform {
             }
             case IdnExp(idn)         =>				
             {
-                val loading = L_Load(L_IntType(32), valuemap(idn))
+                val loading = L_Load(L_PointerType(L_IntType(32)), valuemap(idn))
                 addInstruction(loading)
                 loading
             }
@@ -469,7 +469,7 @@ object IRTransform {
                 val indxval = codeExpression(indx)
                 //val typeidx = L_TypeIndex(L_IntType(32), indxval)
                 val elementPtr = L_GetElementPtr(valuemap(idn)->resultType, valuemap(idn), List(0, indxval), inBounds = true)
-                val elementVal = L_Load(L_IntType(32), elementPtr)
+                val elementVal = L_Load(L_PointerType(L_IntType(32)), elementPtr)
                 addInstructions(List(elementPtr, elementVal))
                 elementVal
             }
