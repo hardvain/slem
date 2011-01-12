@@ -30,6 +30,7 @@ object IRTreeFactory {
     var print_int_str : L_GlobalVariable = null
     var printf_int : L_FunctionDeclaration = null
     var atoiFunc : L_FunctionDeclaration = null
+    var putsFunc : L_FunctionDeclaration = null
     
     var imports : List[L_Global] = List()
     
@@ -40,6 +41,7 @@ object IRTreeFactory {
         print_int_str = null
         printf_int = null
         atoiFunc = null
+        putsFunc = null
         imports = List()
     }
     
@@ -68,7 +70,28 @@ object IRTreeFactory {
             funcName = "printf"
         )
     }
+    
+    private def puts_definition() : L_FunctionDeclaration =
+    {
+        val putsarg = List(L_Argument(L_PointerType(L_IntType(8)), attrs = List("nocapture")))
+        val retatt = List("nounwind")
+        L_FunctionDeclaration(
+            L_IntType(32),
+            //returnAttributes = retatt,
+            arguments = putsarg,
+            funcName = "puts"
+        )
+    }
 
+    private def import_puts() =
+    {
+        if(putsFunc == null)
+        {
+            putsFunc = puts_definition()
+            imports = imports ::: List(putsFunc)
+        }
+    }
+    
     private def import_printline_int_str() = 
     {
         if(printline_int_str == null)
@@ -148,7 +171,15 @@ object IRTreeFactory {
             }
             case _ => getarg
         }
-        
+    }
+    
+    //calls puts on the input i8**
+    def L_Macro_Puts(str : L_Value) : List[L_Instruction] =
+    {
+        import_puts()
+        val strlocptr = L_GetElementPtr(L_PointerType(str->resultType), str, List(0,0))
+        val putscall = L_Call(L_IntType(32), putsFunc, List(strlocptr))
+        List(strlocptr, putscall)
     }
     
     ///////////////////////////////
