@@ -52,6 +52,7 @@ object IRTransform {
         case ObrInt (_, decls, stmts, _) =>
         {
             resetMacros()
+            val errorString = L_GlobalVariable(L_String("Error: Incorrect number of arguments\\00"), isConstant = true)
             valuemap = HashMap[String, L_Value] ()
             nextParamIndex = 0
             val numParams = decls.filter(d=>
@@ -75,7 +76,7 @@ object IRTransform {
             
             //build argument count failure routine
             currentBlockLabel = argumentFailureExitLabel
-            val errorPrintMacro = List() //TODO
+            val errorPrintMacro = L_Macro_Puts(errorString)
             addInstructions(errorPrintMacro ::: List(L_Ret(0)))
             
             //build main program
@@ -83,7 +84,7 @@ object IRTransform {
             codeProgram(decls,stmts)
             val obrArgs = List(argc, argv)
             val obrFunc = L_FunctionDefinition(L_IntType(32), blockList, funcName = "main", arguments = obrArgs)
-            val mainmodule = L_Module(List(obrFunc) ::: imports)
+            val mainmodule = L_Module(List(obrFunc,errorString) ::: imports)
             L_Program(List(mainmodule))
         }
     }
