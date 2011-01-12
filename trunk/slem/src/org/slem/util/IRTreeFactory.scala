@@ -152,7 +152,7 @@ object IRTreeFactory {
     def L_Macro_GetArgument(argv : L_Value, idx : L_Value) : List[L_Instruction] =
     {
         val arglocptr = L_GetElementPtr(L_PointerType(L_PointerType(L_IntType(8))), argv, List(idx), inBounds = true)
-        val argloc = L_Load(L_PointerType(L_IntType(8)), arglocptr, alignment = 8)
+        val argloc = L_Load(L_PointerType(L_PointerType(L_IntType(8))), arglocptr, alignment = 8)
         List(arglocptr, argloc)
     }
     
