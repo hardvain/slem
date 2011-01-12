@@ -449,16 +449,16 @@ class IRTreeEncoder(emitter : Emitter)
                 emit(n->ssa)
                 emit(" = alloca ")
                 encodeType(n.typ)
-                if(n.hasNumElements)
+                if(n.numElements != null)
                 {
-                    emit(", ")
-                    encodeType(n.numElementsType)
-                    emit(" ")
-                    encodeValue(n.numElements)
+                   emit(", ")
+                   encodeType(n.numElements->resultType)
+                   emit(" ")
+                   encodeValue(n.numElements)
                 }
-                if(n.hasAlign)
+                if(n.alignment != 0)
                 {
-                    emit(", align " + n.alignment)
+                   emit(", align " + n.alignment)
                 }
             }
             case n : L_Load =>
@@ -471,9 +471,9 @@ class IRTreeEncoder(emitter : Emitter)
                 }
                 emit("load ")
                 encodeType(n.typ)
-                emit("* ")
+                emit(" ")
                 encodeValue(n.pointer)
-                if(n.hasAlign)
+                if(n.alignment != 0)
                 {
                     emit(", align " + n.alignment)
                 }
@@ -494,9 +494,9 @@ class IRTreeEncoder(emitter : Emitter)
                 encodeValue(n.value)
                 emit(", ")
                 encodeType(n.pointer->resultType)
-                emit(" ") //pointer bug.
+                emit(" ")
                 encodeValue(n.pointer)
-                if(n.hasAlign)
+                if(n.alignment != 0)
                 {
                     emit(", align " + n.alignment)
                 }
@@ -727,20 +727,36 @@ class IRTreeEncoder(emitter : Emitter)
                 if(n.callConv.size > 0)
                 {
                     emit(n.callConv)
+                    emit(" ")
                 }
                 for(ra <- n.retAttrs)
                 {
-                    emit(" " + ra)
+                    emit(ra + " ")
                 }
-                encodeType(n.funcTypePtr) //TODO - make this work correctly with pointers
+                if(n.funcTypePtr != null)
+                {
+                    encodeType(n.funcTypePtr)
+                }
+                else
+                {
+                    encodeType(n.funcPtrVal->resultType)
+                }
                 emit(" ")
                 encodeValue(n.funcPtrVal)
-                emit(" (")
+                var imax = n.args.size
+                var i = 1
+                emit("( ")
                 for(arg <- n.args)
                 {
                     encodeArgument(arg)
+                    if(i < imax)
+                    {
+                        emit(", ")
+                    }
+                    i = i + 1
                 }
-                emit(")")
+                emit(" )")
+
                 for(at<-n.attrs)
                 {
                     emit(" " + at)
@@ -904,7 +920,7 @@ class IRTreeEncoder(emitter : Emitter)
             case n : L_FunctionType =>
             {
                 encodeType(n.returnType)
-                emit(" (")
+                emit("( ")
                 var imax = n.parameterList.size
                 var i = 1
                 for(param<-n.parameterList)
@@ -916,7 +932,7 @@ class IRTreeEncoder(emitter : Emitter)
                     }
                     i = i + 1
                 }
-                emit(")")
+                emit(" )")
             }
             case n : L_StructureType =>
             {
