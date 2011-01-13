@@ -36,7 +36,13 @@ class MemOpSpec extends Spec {
 		encoder.encodeInstruction(instr)
 		e.result
     }
-	
+	def typeTest(instr : L_Instruction) : String =
+	{
+	    val e = new StringEmitter()
+		val encoder = new IRTreeEncoder(e)
+		encoder.encodeType(instr->resultType)
+		e.result
+	}	
     describe("Memory Op Instruction - alloca: ") {
  
       it("L_Alloca - i32") {
@@ -117,7 +123,55 @@ class MemOpSpec extends Spec {
             emitTest(L_GetElementPtr(L_PointerType(L_IntType(32)), myPtr, List(0), inBounds = true))
         }
       }
-      //TODO GEP Type tests
+      it("L_GetElementPtr - structure type test")
+      {
+        expect("i16*")
+        {
+            val mystr = L_Alloca(L_StructureType(List(L_IntType(64), L_IntType(32), L_IntType(16))))
+            typeTest(L_GetElementPtr(mystr->resultType, mystr, List(0, 2)))
+        }
+      }
+      it("L_GetElementPtr - nested structure type test")
+      {
+        expect("i16*")
+        {
+            val mystr = L_Alloca(L_StructureType(List(L_StructureType(List(L_IntType(64), L_IntType(32), L_IntType(16))), L_IntType(128))))
+            typeTest(L_GetElementPtr(mystr->resultType, mystr, List(0, 0, 2)))
+        }
+      }
+      it("L_GetElementPtr - nested structure type test 2")
+      {
+        expect("i128*")
+        {
+            val mystr = L_Alloca(L_StructureType(List(L_StructureType(List(L_IntType(64), L_IntType(32), L_IntType(16))), L_IntType(128))))
+            typeTest(L_GetElementPtr(mystr->resultType, mystr, List(0, 1)))
+        }
+      }
+      it("L_GetElementPtr - vector type test")
+      {
+        expect("i16*")
+        {
+            val mystr = L_Alloca(L_VectorType(50, L_IntType(16)))
+            typeTest(L_GetElementPtr(mystr->resultType, mystr, List(0, 0)))
+        }
+      }
+      it("L_GetElementPtr - vector/structure type test 2")
+      {
+        expect("i64*")
+        {
+            val mystr = L_Alloca(L_VectorType(50, L_StructureType(List(L_IntType(16), L_IntType(64)))))
+            typeTest(L_GetElementPtr(mystr->resultType, mystr, List(0, 0, 1)))
+        }
+      }
+      it("L_GetElementPtr - array/vector/structure type test")
+      {
+        expect("i64*")
+        {
+            val mystr = L_Alloca(L_ArrayType(5, L_VectorType(50, L_StructureType(List(L_IntType(16), L_IntType(64))))))
+            typeTest(L_GetElementPtr(mystr->resultType, mystr, List(0, 0, 0, 1)))
+        }
+      }
+      
     }
     
     
