@@ -552,7 +552,7 @@ class IRTreeEncoder(emitter : Emitter)
             case n : L_FCMP =>
             {
                 emit(n->ssa)
-                emit(" = icmp " + n.compCode + " ")
+                emit(" = fcmp " + n.compCode + " ")
                 encodeType(n.LHS->resultType)
                 emit(" ")
                 encodeValue(n.LHS)
@@ -563,14 +563,20 @@ class IRTreeEncoder(emitter : Emitter)
             {
                 emit(n->ssa)
                 emit(" = phi ")
-                encodeType(n.valueLabels.head->resultType)
+                encodeType(n.valueLabels.head.value->resultType)
+                var i = 0
                 for(vlab<-n.valueLabels)
                 {
                     emit(" [ ")
                     encodeValue(vlab.value)
-                    emit(" ")
+                    emit(", %")
                     encodeLabel(vlab.label)
                     emit(" ]")
+                    if(i < n.valueLabels.size - 1)
+                    {
+                      emit(",")
+                    }
+                    i = i + 1
                 }
             }
             case n : L_Select =>
@@ -606,12 +612,20 @@ class IRTreeEncoder(emitter : Emitter)
                 {
                     emitw(ra)
                 }
+                /*
                 encodeType(n.typ)
                 emit(" ")
-                if(n.fnty.size > 0)
+                */
+                if(n.fnty != null)
                 {
-                    emit(n.fnty + "* ") //TODO : implement function type pointers properly
+                    encodeType(n.fnty)
                 }
+                else
+                {
+                    encodeType(n.fnptrval->resultType)
+                }
+                emit(" ")
+                
                 encodeValue(n.fnptrval)
                 var imax = n.fnargs.size
                 var i = 1
@@ -625,7 +639,7 @@ class IRTreeEncoder(emitter : Emitter)
                     }
                     i = i + 1
                 }
-                emit(" ) ")
+                emit(" )")
                 for(fnattr <- n.fnattrs)
                 {
                     emit(" " + fnattr)
@@ -635,8 +649,8 @@ class IRTreeEncoder(emitter : Emitter)
             {
                 emit(n->ssa)
                 emit(" = va_arg ")
-                encodeValue(n.argPtr)
-                emit("* ")
+                encodeType(n.argList->resultType)
+                emit(" ")
                 encodeValue(n.argList)
                 emit(", ")
                 encodeType(n.argType)

@@ -578,11 +578,11 @@ object IRTree {
         tail : Boolean = false,                         //Optional
         callConvention : String = "",                   //Optional
         returnAttributes : List[String] = List(),       //Optional
-        fnty : String = "",                             //Optional - TODO : implement function type pointers
+        fnty : L_Type = null,                           //Optional - TODO : implement function type pointers
         fnattrs : List[String] = List()                 //Optional
         ) extends L_Instruction with L_Value
     
-    case class L_Va_Arg(argPtr : L_Value, argList : L_Value, argType : L_Type) extends L_Instruction with L_Value
+    case class L_Va_Arg(argList : L_Value, argType : L_Type) extends L_Instruction with L_Value
     
     ////////////TERMINATOR INSTRUCTIONS////////////
     case class L_Ret(rvalue : L_Value) extends L_TerminatorInstruction
@@ -788,6 +788,7 @@ object IRTree {
             }
             case n : L_Select         => (n.val1)->resultType
             case n : L_Call           => n.typ //TODO : Check this.
+
             case n : L_Va_Arg         => n.argType
             case n : L_Invoke         => n.funcTypePtr
             

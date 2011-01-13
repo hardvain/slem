@@ -36,6 +36,13 @@ class FunctionSpec extends Spec {
 		encoder.encodeFunctionDeclaration(instr)
 		e.result
     }
+    private def emitFuncDefTest(instr : L_FunctionDefinition) : String = 
+    {
+        val e = new StringEmitter()
+		val encoder = new IRTreeEncoder(e)
+		encoder.encodeFunctionDefinition(instr)
+		e.result
+    }
 	private def typeTest(instr : L_Instruction) : String =
 	{
 	    val e = new StringEmitter()
@@ -61,6 +68,31 @@ class FunctionSpec extends Spec {
                 garbageCollector = "gctest"
             )
             emitTest(myfunc)
+        }
+      }
+    }
+    
+    describe("Function Definitions: ") {
+    
+      it("full fn test") {
+        expect("define linktest vistest cctest retattrs1 retattrs2 i64 @myFunc(i32 %param0, i64 %param1) fnattr1 fnattr2 section " + '"' + "sectiontest" + '"' + " align 5 gc " + '"' + "gctest" + '"' + " {\nblock0:\n  %0 = add i32 1, 2\n  ret i32 0\n\n}\n\n")
+        {
+            val myBlock = L_Block(List(L_Add(1,2)), L_Ret(0))
+            val myfunc = L_FunctionDefinition(
+                L_IntType(64),
+                List(myBlock),
+                funcName = "myFunc",
+                arguments = List(L_IntType(32), L_IntType(64)),
+                linkage = "linktest",
+                visibilityStyle = "vistest",
+                callConvention = "cctest",
+                returnAttributes = List("retattrs1", "retattrs2"),
+                funcAttributes = List("fnattr1", "fnattr2"),
+                section = "sectiontest",
+                alignment = 5,  
+                garbageCollector = "gctest"
+            )
+            emitFuncDefTest(myfunc)        
         }
       }
     }
