@@ -27,8 +27,14 @@ object IRTree {
     ////////////BASICS////////////
     sealed abstract class L_Node extends Attributable
     
-    case class L_Module(globals : List[L_Global], metadata : List[L_BaseMetadata] = List()) extends L_Node
-    case class L_Program(modules : List[L_Module]) extends L_Node 
+    abstract class L_BaseModule extends L_Node
+    
+    case class L_Module(globals : List[L_Global], metadata : List[L_BaseMetadata] = List()) extends L_BaseModule
+    
+    //Module level inline assembly
+    case class L_AsmModule(asm : String) extends L_BaseModule
+    
+    case class L_Program(modules : List[L_BaseModule]) extends L_Node 
     abstract class L_Metadata extends L_Node with L_Value
     
     

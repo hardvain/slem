@@ -191,16 +191,26 @@ class IRTreeEncoder(emitter : Emitter)
     def encodeTree(p : L_Program) = 
     {
         reset()
-        for(m <- p.modules)
+        for(module <- p.modules)
         {
-            for(g <- m.globals)
+            module match
             {
-                encodeGlobal(g)
-            }
-            for(metnode <- m.metadata)
-            {
-                encodeMetadata(metnode)
-                emitln()
+                case m : L_Module =>
+                {
+                    for(g <- m.globals)
+                    {
+                        encodeGlobal(g)
+                    }
+                    for(metnode <- m.metadata)
+                    {
+                        encodeMetadata(metnode)
+                        emitln()
+                    }
+                }
+                case m : L_AsmModule =>
+                {
+                    emitln("module asm " + '"' + m.asm + '"')
+                }
             }
         }
         if(fileOutputEnabled)
