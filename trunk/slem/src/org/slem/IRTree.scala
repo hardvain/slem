@@ -149,6 +149,7 @@ object IRTree {
     case class L_PointerType(pointer : L_Type) extends L_Type
     case class L_VectorType(numElements : Long, elementType : L_Type) extends L_Type
     case class L_OpaqueType() extends L_Type
+    case class L_UpReferenceType(levels : Int) extends L_Type
     //TODO: Complete Type Up-references
     
     ////////////METADATA////////////
@@ -197,6 +198,9 @@ object IRTree {
     
     case class L_Vector(elements : List[L_Value]) extends L_Constant
     case class L_ZeroInitialiser(typ : L_Type) extends L_Constant
+    
+    //Block addresses constant for indirect branches
+    case class L_BlockAddress(functionTarget : L_Value, blockTarget : L_Label) extends L_Constant
     
     //TODO - implement metadata nodes
     //case class L_MetadataNode() extends L_Constant

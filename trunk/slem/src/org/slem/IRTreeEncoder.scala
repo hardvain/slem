@@ -365,6 +365,14 @@ class IRTreeEncoder(emitter : Emitter)
                 }
                 emit(" >")
             }
+            case n : L_BlockAddress =>
+            {
+                emit("blockaddress(")
+                encodeValue(n.functionTarget)
+                emit(", ")
+                encodeLabel(n.blockTarget)
+                emit(")")
+            }
             case _ => emit("Unknown Constant")
         }
     }
@@ -1085,6 +1093,10 @@ class IRTreeEncoder(emitter : Emitter)
             case n : L_OpaqueType =>
             {
                 emit("opaque")
+            }
+            case n : L_UpReferenceType =>
+            {
+                emit("\\" + n.levels)
             }
             case _ => "Unknown Type : " + t
         }
