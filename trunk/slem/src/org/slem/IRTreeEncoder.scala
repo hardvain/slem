@@ -36,6 +36,18 @@ class IRTreeEncoder(emitter : Emitter)
     var currentGlobalNum = 0
     var currentFuncNum = 0
     var currentLabelNum = 0
+    var currentMetadataNum = 0
+    
+    val metadataname : L_MetadataNode ==> String =
+    {
+        attr
+        {
+            case _ =>
+            {
+                getNewMetadataName()
+            }
+        }
+    }
     
     val labelname : L_Label ==> String =
     {
@@ -163,6 +175,12 @@ class IRTreeEncoder(emitter : Emitter)
         "%" + (currentSSA - 1)
     }
     
+    def getNewMetadataName() : String =
+    {
+        currentMetadataNum = currentMetadataNum + 1
+        "!" + (currentMetadataNum - 1)
+    }
+    
     def reset() =
     {
         fileout = ""
@@ -178,6 +196,11 @@ class IRTreeEncoder(emitter : Emitter)
             for(g <- m.globals)
             {
                 encodeGlobal(g)
+            }
+            for(metnode <- m.metadata)
+            {
+                encodeMetadata(metnode)
+                emitln()
             }
         }
         if(fileOutputEnabled)
@@ -352,12 +375,69 @@ class IRTreeEncoder(emitter : Emitter)
             case n : L_FunctionReference => encodeValue(n.funcPtr)
             case n : L_FunctionDefinition => emit(n->funcname)
             case n : L_FunctionDeclaration => emit(n->funcname)
+            case n : L_MetadataString => emit("!" + '"' + n.str + '"')
+            case n : L_MetadataNode => emit(n->metadataname)
+            case n : L_NamedMetadata => emit("!" + n.name)
             case _ => emit("UnknownValue : " + v)
         }
         0
     }
     
+    def encodeMetadata(m : L_BaseMetadata)
+    {
+        m match
+        {
+            case n : L_MetadataNode =>
+            {
+                emit(n->metadataname + " = metadata !{ ")
+                var i = 0
+                for(mnode <-(n.fields))
+                {
+                    encodeType(mnode->resultType)
+                    emit(" ")
+                    encodeValue(mnode)
+                    if(i < n.fields.size - 1)
+                    {
+                        emit(", ")
+                    }
+                    i = i + 1
+                }
+                emit("}")
+            }
+            case n : L_NamedMetadata =>
+            {
+                emit("!" + n.name + " = !{ ")
+                var i = 0
+                for(mnode <-(n.fields))
+                {
+                    //encodeType(mnode->resultType)
+                    //emit(" ")
+                    encodeValue(mnode)
+                    if(i < n.fields.size - 1)
+                    {
+                        emit(", ")
+                    }
+                    i = i + 1
+                }
+                emit("}")
+            }
+        }
+    }
     
+    def encodeBoundMetadata(b : L_Instruction) =
+    {
+        if(b.mappedMetadataIdn != null && b.mappedMetadataVal != null)
+        {
+            emit(", ")
+            //encodeType(b.mappedMetadataIdn->resultType)
+            //emit(" ")
+            encodeValue(b.mappedMetadataIdn)
+            emit(" ")
+            //encodeType(b.mappedMetadataVal->resultType)
+            //emit(" ")
+            encodeValue(b.mappedMetadataVal)
+        }
+    }
     def encodeInstruction(b : L_Instruction) = 
     {
         b match
@@ -657,6 +737,7 @@ class IRTreeEncoder(emitter : Emitter)
             }
             case _ => emit("Unknown Instruction : " + b)
         }
+        encodeBoundMetadata(b)
     }
     
     def encodeTerminator(t : L_TerminatorInstruction) = 
