@@ -27,12 +27,21 @@ object IRTree {
     ////////////BASICS////////////
     sealed abstract class L_Node extends Attributable
     
-    case class L_Module(globals : List[L_Global]) extends L_Node
+    case class L_Module(globals : List[L_Global], metadata : List[L_BaseMetadata] = List()) extends L_Node
     case class L_Program(modules : List[L_Module]) extends L_Node 
-    case class L_Metadata() extends L_Node
+    abstract class L_Metadata extends L_Node with L_Value
     
     
     abstract class L_Instruction extends L_Node
+    {
+        var mappedMetadataIdn : L_Metadata = null
+        var mappedMetadataVal : L_Metadata = null
+        def mapMetadata(mdidn : L_Metadata, mdval : L_Metadata) = 
+        {
+            mappedMetadataIdn = mdidn
+            mappedMetadataVal = mdval
+        }
+    }
     abstract class L_TerminatorInstruction extends L_Instruction
     abstract class L_Constant extends L_Node with L_Value
     
@@ -135,6 +144,12 @@ object IRTree {
     case class L_VectorType(numElements : Long, elementType : L_Type) extends L_Type
     case class L_OpaqueType() extends L_Type
     //TODO: Complete Type Up-references
+    
+    ////////////METADATA////////////
+    case class L_MetadataString(str : String) extends L_Metadata
+    abstract class L_BaseMetadata extends L_Metadata
+    case class L_MetadataNode(fields : List[L_Value]) extends L_BaseMetadata
+    case class L_NamedMetadata(name : String, fields : List[L_MetadataNode]) extends L_BaseMetadata
     
     ////////////VALUES////////////
     trait L_Value extends L_Node
@@ -624,8 +639,6 @@ object IRTree {
     
     case class L_InsertValue(value : L_Value, elt : L_Value, idx : L_Value) extends L_Instruction with L_Value
     
-    
-    
     val resultType : L_Node ==> L_Type = 
     {
         attr {
@@ -648,6 +661,9 @@ object IRTree {
                 }
                 L_PointerType(L_FunctionType(n.returnType, argTypes))            
             }
+            
+            //METADATA
+            case n : L_Metadata       => L_MetadataType()
         
             //SIMPLE CONSTANTS
             case n : L_Boolean        => L_IntType(1)
