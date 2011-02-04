@@ -575,10 +575,12 @@ class IRTreeEncoder(emitter : Emitter)
                 {
                     emit(", align " + n.alignment)
                 }
+                /* Use metadata nodes to support this
                 if(n.nonTemporal)
                 {
                     emit(", !nontemporal !" + n.nonTempIndex)
                 }
+                */
             }
             case n : L_Store =>
             {
@@ -598,10 +600,12 @@ class IRTreeEncoder(emitter : Emitter)
                 {
                     emit(", align " + n.alignment)
                 }
+                /* Use metadata nodes to support this
                 if(n.nonTemporal)
                 {
                     emit(", !nontemporal !" + n.nonTempIndex)
                 }
+                */
             }
             case n : L_GetElementPtr =>
             {

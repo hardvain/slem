@@ -75,4 +75,64 @@ class ConstantSpec extends Spec {
       }
     }
     
+    describe("Simple Constants") {
+      it("L_Boolean")
+      {
+        expect("%0 = add i1 true, false")
+        {
+          val myval1 = L_Boolean(true)
+          val myval2 = L_Boolean(false)
+          val addinstr = L_Add(myval1, myval2)
+          emitTest(addinstr)
+        }
+      }
+      it("L_Int")
+      {
+        expect("%0 = add i33 16, 0")
+        {
+          val myval1 = L_Int(33, 16)
+          val myval2 = L_Int(33, 0)
+          val addinstr = L_Add(myval1, myval2)
+          emitTest(addinstr)
+        }
+        expect("%0 = add i32 15, 32")
+        {
+           emitTest(L_Add(15,32))
+        }
+        expect("%0 = add i64 20, 25")
+        {
+          val long1 : Long = 20
+          val long2 : Long = 25
+          emitTest(L_Add(long1, long2))
+        }
+      }
+      it("L_Float")
+      {
+        expect("%0 = fadd float 1.0, 2.0")
+        {
+          val f1 : Float = 1
+          val f2 : Float = 2
+          emitTest(L_FAdd(f1, f2))
+        }
+        expect("%0 = fadd float 1.0, 2.0")
+        {
+          emitTest(L_FAdd(L_Float("1.0"), L_Float("2.0")))
+        }
+      }
+      it("L_Double")
+      {
+        expect("%0 = fadd double 1.0, 2.0")
+        {
+          val double1 : Double = 1.0
+          val double2 : Double = 2.0
+          emitTest(L_FAdd(double1, double2))
+        }
+        expect("%0 = fadd double 1.0, 2.0")
+        {
+          emitTest(L_FAdd(L_Double("1.0"), L_Double("2.0"))) 
+        }
+      }
+      
+    }
+    
 }
