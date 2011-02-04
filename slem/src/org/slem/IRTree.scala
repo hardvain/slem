@@ -358,11 +358,11 @@ object IRTree {
     ////////////MEMORY INSTRUCTIONS////////////
     case class L_Alloca(typ : L_Type, numElements : L_Value = null, alignment : Long = 0) extends L_Instruction with L_Value
 
-    //TODO : need to implement metadata in order to make this fully functional.
-    case class L_Load(typ : L_Type, pointer : L_Value, isVolatile : Boolean = false, alignment : Long = 0, nonTemporal : Boolean = false, nonTempIndex : Long = 0) extends L_Instruction with L_Value
+    //TODO : need to implement metadata in order to make this fully functional. , nonTemporal : Boolean = false, nonTempIndex : Long = 0
+    case class L_Load(typ : L_Type, pointer : L_Value, isVolatile : Boolean = false, alignment : Long = 0) extends L_Instruction with L_Value
 
-    //TODO : need to implement metadata in order to make this fully functional.
-    case class L_Store(value : L_Value, pointer : L_Value, isVolatile : Boolean = false, alignment : Long = 0, nonTemporal : Boolean = false, nonTempIndex : Long = 0) extends L_Instruction
+    //TODO : need to implement metadata in order to make this fully functional., nonTemporal : Boolean = false, nonTempIndex : Long = 0
+    case class L_Store(value : L_Value, pointer : L_Value, isVolatile : Boolean = false, alignment : Long = 0) extends L_Instruction
     
     case class L_TypeIndex(ty : L_Type, idx : L_Value) extends L_Node
     implicit def longToTypeIndex(l : Long) : L_TypeIndex = L_TypeIndex(L_IntType(64), l)
@@ -372,9 +372,9 @@ object IRTree {
     {
         def getResultType() : L_Type =
         {
-            getResultType(pty, typeIndexes)
+            getResultType(pty, typeIndexes, List())
         }
-        def getResultType(ptype : L_Type, indexes : List[L_Value]) : L_Type =
+        def getResultType(ptype : L_Type, indexes : List[L_Value], prevPtrTypeList : List[L_Type]) : L_Type =
         {
             ptype match
             {
@@ -384,7 +384,7 @@ object IRTree {
                     val idxTail = indexes.tail
                     if(idxTail.size > 0)
                     {
-                        getResultType(nextType, idxTail)
+                        getResultType(nextType, idxTail, prevPtrTypeList ::: List(t))
                     }
                     else
                     {
@@ -397,7 +397,7 @@ object IRTree {
                     val idxTail = indexes.tail
                     if(idxTail.size > 0)
                     {
-                        getResultType(nextType, idxTail)
+                        getResultType(nextType, idxTail, prevPtrTypeList ::: List(t))
                     }
                     else
                     {
@@ -410,7 +410,7 @@ object IRTree {
                     val idxTail = indexes.tail
                     if(idxTail.size > 0)
                     {
-                        getResultType(nextType, idxTail)
+                        getResultType(nextType, idxTail, prevPtrTypeList ::: List(t))
                     }
                     else
                     {
@@ -431,7 +431,7 @@ object IRTree {
                             val idxTail = indexes.tail
                             if(idxTail.size > 0)
                             {
-                                getResultType(nextType, idxTail)
+                                getResultType(nextType, idxTail, prevPtrTypeList ::: List(t))
                             }
                             else
                             {
@@ -443,6 +443,44 @@ object IRTree {
                             L_OpaqueType() //Type error has occured
                         }
                     }					
+                }
+                case t : L_UpReferenceType =>
+                {
+                    if(t.levels == 1)
+                    {
+                        return t;
+                    }
+                    else if(t.levels > 1)
+                    {
+                       // val nextType = t.pointer
+                        val idxTail = indexes.tail
+                        if(idxTail.size > 0)
+                        {
+                            if(prevPtrTypeList.length - t.levels >= 0)
+                            {
+                                return getResultType(prevPtrTypeList(prevPtrTypeList.length - t.levels), idxTail, List())
+                            }
+                            else
+                            {
+                                return L_OpaqueType() //Type error has occured
+                            }                            
+                        }
+                        else
+                        {
+                            if(prevPtrTypeList.length - t.levels >= 0)
+                            {
+                                return prevPtrTypeList(prevPtrTypeList.length - t.levels)
+                            }
+                            else
+                            {
+                                return L_OpaqueType() //Type error has occured
+                            }
+                        }
+                    }
+                    else
+                    {
+                        L_OpaqueType() //Type error has occured
+                    }
                 }
                 case _ => 
                 {
