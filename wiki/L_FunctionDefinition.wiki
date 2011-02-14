@@ -8,13 +8,13 @@
         funcName                : String = "",               //Optional
         arguments               : List[L_Argument] = List(), //Optional
         linkage                 : String = "",               //Optional
-        visibilityStyle         : String = "",                   //Optional
+        visibilityStyle         : String = "",               //Optional
         callConvention          : String = "",               //Optional
         returnAttributes        : List[String] = List(),     //Optional
         funcAttributes          : List[String] = List(),     //Optional
-        section                 : String = "",                   //Optional
-        alignment               : Int = 0,                       //Optional
-        garbageCollector        : String = ""                    //Optional
+        section                 : String = "",               //Optional
+        alignment               : Int = 0,                   //Optional
+        garbageCollector        : String = ""                //Optional
         ) extends L_Function
 
 }}}
