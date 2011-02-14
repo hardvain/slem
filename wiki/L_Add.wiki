@@ -1,25 +1,31 @@
 #sidebar TableOfContents
 
 {{{
-    case class L_Add(LHSin : L_Value, RHSin : L_Value) extends L_BinOpInstruction(LHSin, RHSin)
-    {
-        override val instructionString = "add"
-    }
+
+
+
+case class L_Add(LHSin : L_Value, RHSin : L_Value) extends L_BinOpInstruction(LHSin, RHSin)
+{
+    override val instructionString = "add"
+}
     
-    case class L_NSWAdd(LHSin : L_Value, RHSin : L_Value) extends L_BinOpInstruction(LHSin, RHSin)
-    {
-        override val instructionString = "add nsw"
-    }
+case class L_NSWAdd(LHSin : L_Value, RHSin : L_Value) extends L_BinOpInstruction(LHSin, RHSin)
+{
+    override val instructionString = "add nsw"
+}
     
-    case class L_NUWAdd(LHSin : L_Value, RHSin : L_Value) extends L_BinOpInstruction(LHSin, RHSin)
-    {
-        override val instructionString = "add nuw"
-    }
+case class L_NUWAdd(LHSin : L_Value, RHSin : L_Value) extends L_BinOpInstruction(LHSin, RHSin)
+{
+    override val instructionString = "add nuw"
+}
     
-    case class L_NUWNSWAdd(LHSin : L_Value, RHSin : L_Value) extends L_BinOpInstruction(LHSin, RHSin)
-    {
-        override val instructionString = "add nuw nsw"
-    }
+case class L_NUWNSWAdd(LHSin : L_Value, RHSin : L_Value) extends L_BinOpInstruction(LHSin, RHSin)
+{
+    override val instructionString = "add nuw nsw"
+}
+
 }}}
 
-Superclass of all LLVM Instructions in SLEM.
+Constructs an 'add' instruction. Takes a pair of values for LHS/RHS respectively as parameters. 
+
+The various classes represent the configurations for no signed wrap/no unsigned wrap for this add instruction - see the LLVM Assembly Reference - [http://llvm.org/docs/LangRef.html#i_add 'add' Instruction]
