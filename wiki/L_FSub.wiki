@@ -19,6 +19,10 @@ Constructs an 'fsub' instruction. Takes a pair of values for LHS/RHS respectivel
 
 For further information see the LLVM Assembly Reference Manual - [http://llvm.org/docs/LangRef.html#i_fsub 'fsub' Instruction]
 
+*Arguments:*
+
+The two arguments to the 'fsub' instruction must be floating point or vector of floating point values. Both arguments must have identical types.
+
 *Semantics:*
 
 The value produced is the floating point difference of the two operands.
