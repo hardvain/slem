@@ -28,7 +28,7 @@ case class L_NUWNSWAdd(LHSin : L_Value, RHSin : L_Value) extends L_BinOpInstruct
 
 Constructs an 'add' instruction. Takes a pair of values for LHS/RHS respectively as parameters. 
 
-The various classes represent the configurations for no signed wrap/no unsigned wrap for this add instruction - see the LLVM Assembly Reference - [http://llvm.org/docs/LangRef.html#i_add 'add' Instruction]
+The various classes represent the configurations for no signed wrap/no unsigned wrap for this add instruction - see the LLVM Assembly Reference Manual - [http://llvm.org/docs/LangRef.html#i_add 'add' Instruction]
 
 Emitted LLVM IR:
 {{{
