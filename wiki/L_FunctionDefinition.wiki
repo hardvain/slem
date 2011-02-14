@@ -3,7 +3,7 @@
 {{{
     ////////////FUNCTION DEFINITIONS////////////
     case class L_FunctionDefinition(
-        returnType                  : L_Type,
+        returnType              : L_Type,
         blocks                  : List[L_Block],
         funcName                : String = "",               //Optional
         arguments               : List[L_Argument] = List(), //Optional
