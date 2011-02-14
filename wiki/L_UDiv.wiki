@@ -5,7 +5,7 @@
 
 
 
-ccase class L_UDiv(LHSin : L_Value, RHSin : L_Value) extends L_BinOpInstruction(LHSin, RHSin) 
+case class L_UDiv(LHSin : L_Value, RHSin : L_Value) extends L_BinOpInstruction(LHSin, RHSin) 
 {
     override val instructionString = "udiv"
 }
