@@ -31,9 +31,9 @@ A function definition's linkage type, visibility style, call convetion, return a
 
 Emitted LLVM IR:
 {{{
-define [linkage] [visibility]
-       [cconv] [ret attrs]
-       <ResultType> @<FunctionName> ([argument list])
-       [fn Attrs] [section "name"] [align N]
-       [gc] { ... }
+define [linkage] [visibilityStyle]
+       [callConvention] [returnAttributes]
+       <returnType> @<funcName> ([argument list])
+       [funcAttributes] [section "name"] [align N]
+       [garbageCollector] { ... }
 }}}
