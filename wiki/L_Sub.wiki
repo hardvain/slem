@@ -31,6 +31,10 @@ Constructs a 'sub' instruction. Takes a pair of values for LHS/RHS respectively 
 
 The various classes represent the configurations for no signed wrap/no unsigned wrap for this add instruction - see the LLVM Assembly Reference Manual - [http://llvm.org/docs/LangRef.html#i_sub 'sub' Instruction]
 
+*Arguments*:
+
+The two arguments to the 'sub' instruction must be integer or vector of integer values. Both arguments must have identical types.
+
 *Semantics*:
 
 The value produced is the integer difference of the two operands.
