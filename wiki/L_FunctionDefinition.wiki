@@ -5,13 +5,13 @@
     case class L_FunctionDefinition(
         returnType                  : L_Type,
         blocks                  : List[L_Block],
-        funcName                    : String = "",               //Optional
-        arguments                   : List[L_Argument] = List(), //Optional
-        linkage                     : String = "",               //Optional
+        funcName                : String = "",               //Optional
+        arguments               : List[L_Argument] = List(), //Optional
+        linkage                 : String = "",               //Optional
         visibilityStyle         : String = "",                   //Optional
-        callConvention              : String = "",               //Optional
-        returnAttributes            : List[String] = List(),     //Optional
-        funcAttributes              : List[String] = List(),     //Optional
+        callConvention          : String = "",               //Optional
+        returnAttributes        : List[String] = List(),     //Optional
+        funcAttributes          : List[String] = List(),     //Optional
         section                 : String = "",                   //Optional
         alignment               : Int = 0,                       //Optional
         garbageCollector        : String = ""                    //Optional
