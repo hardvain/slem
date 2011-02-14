@@ -24,6 +24,12 @@
         * [L_URem 'urem' Instruction]
         * [L_SRem 'srem' Instruction]
         * [L_FRem 'frem' Instruction]
+      * *Bitwise Binary Operations*
+      * *Vector Operations*
+      * *Aggregate Operations*
+      * *Memory Access and Addressing Operations*
+      * *Conversion Operations*
+      * *Other Operations*
     * [L_TerminatorInstruction Terminator Instructions]
     * [L_Type Types]
     * [L_Constant Constants]
