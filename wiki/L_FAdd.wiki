@@ -19,6 +19,10 @@ Constructs an 'fadd' instruction. Takes a pair of values for LHS/RHS respectivel
 
 For further information see the LLVM Assembly Reference Manual - [http://llvm.org/docs/LangRef.html#i_fadd 'fadd' Instruction]
 
+*Arguments:*
+
+The two arguments to the 'fadd' instruction must be floating point or vector of floating point values. Both arguments must have identical types.
+
 *Semantics:*
 
 The value produced is the floating point sum of the two operands.
