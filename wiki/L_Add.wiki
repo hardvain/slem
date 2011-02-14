@@ -32,8 +32,10 @@ The various classes represent the configurations for no signed wrap/no unsigned 
 
 Emitted LLVM IR:
 {{{
-  <result> = add <LHS->resultType> <encodeValue(LHS)>, <encodeValue(RHS)>        
-  <result> = add nuw <LHS->resultType> <encodeValue(LHS)>, <encodeValue(RHS)>    
-  <result> = add nsw <LHS->resultType> <encodeValue(LHS)>, <encodeValue(RHS)>    
-  <result> = add nuw nsw <LHS->resultType> <encodeValue(LHS)>, <encodeValue(RHS)>
+For an add instruction 'n':
+
+  <n->ssa> = add <LHS->resultType> <encodeValue(LHS)>, <encodeValue(RHS)>        
+  <n->ssa> = add nuw <LHS->resultType> <encodeValue(LHS)>, <encodeValue(RHS)>    
+  <n->ssa> = add nsw <LHS->resultType> <encodeValue(LHS)>, <encodeValue(RHS)>    
+  <n->ssah> = add nuw nsw <LHS->resultType> <encodeValue(LHS)>, <encodeValue(RHS)>
 }}}
