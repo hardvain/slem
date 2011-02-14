@@ -34,8 +34,8 @@ Emitted LLVM IR:
 {{{
 For an add instruction 'n':
 
-  <n->ssa> = add <LHS->resultType> <encodeValue(LHS)>, <encodeValue(RHS)>        
-  <n->ssa> = add nuw <LHS->resultType> <encodeValue(LHS)>, <encodeValue(RHS)>    
-  <n->ssa> = add nsw <LHS->resultType> <encodeValue(LHS)>, <encodeValue(RHS)>    
-  <n->ssah> = add nuw nsw <LHS->resultType> <encodeValue(LHS)>, <encodeValue(RHS)>
+  <n->ssa> = add <LHSin->resultType> <encodeValue(LHSin)>, <encodeValue(RHSin)>        
+  <n->ssa> = add nuw <LHSin->resultType> <encodeValue(LHSin)>, <encodeValue(RHSin)>    
+  <n->ssa> = add nsw <LHSin->resultType> <encodeValue(LHSin)>, <encodeValue(RHSin)>    
+  <n->ssa> = add nuw nsw <LHSin->resultType> <encodeValue(LHSin)>, <encodeValue(RHSin)>
 }}}
