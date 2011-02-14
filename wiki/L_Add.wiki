@@ -1,0 +1,25 @@
+#sidebar TableOfContents
+
+{{{
+    case class L_Add(LHSin : L_Value, RHSin : L_Value) extends L_BinOpInstruction(LHSin, RHSin)
+    {
+        override val instructionString = "add"
+    }
+    
+    case class L_NSWAdd(LHSin : L_Value, RHSin : L_Value) extends L_BinOpInstruction(LHSin, RHSin)
+    {
+        override val instructionString = "add nsw"
+    }
+    
+    case class L_NUWAdd(LHSin : L_Value, RHSin : L_Value) extends L_BinOpInstruction(LHSin, RHSin)
+    {
+        override val instructionString = "add nuw"
+    }
+    
+    case class L_NUWNSWAdd(LHSin : L_Value, RHSin : L_Value) extends L_BinOpInstruction(LHSin, RHSin)
+    {
+        override val instructionString = "add nuw nsw"
+    }
+}}}
+
+Superclass of all LLVM Instructions in SLEM.
