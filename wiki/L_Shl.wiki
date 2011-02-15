@@ -51,8 +51,8 @@ If the nuw keyword is present, then the shift produces a trap value if it shifts
 {{{
 For a shl instruction 'n':
 
-  <n->ssa> = shl <LHSin->resultType> <encodeValue(LHSin)>, <encodeValue(RHSin)>     
-  <n->ssa> = shl nuw <LHSin->resultType> <encodeValue(LHSin)>, <encodeValue(RHSin)>    
-  <n->ssa> = shl nsw <LHSin->resultType> <encodeValue(LHSin)>, <encodeValue(RHSin)>    
-  <n->ssa> = shl nuw nsw <LHSin->resultType> <encodeValue(LHSin)>, <encodeValue(RHSin)>        
+  <n->ssa> = shl <encodeType(LHSin->resultType)> <encodeValue(LHSin)>, <encodeValue(RHSin)>     
+  <n->ssa> = shl nuw <encodeType(LHSin->resultType)> <encodeValue(LHSin)>, <encodeValue(RHSin)>    
+  <n->ssa> = shl nsw <encodeType(LHSin->resultType)> <encodeValue(LHSin)>, <encodeValue(RHSin)>    
+  <n->ssa> = shl nuw nsw <encodeType(LHSin->resultType)> <encodeValue(LHSin)>, <encodeValue(RHSin)>        
 }}}
