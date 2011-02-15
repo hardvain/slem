@@ -31,5 +31,5 @@ The 'or' instruction returns the bitwise logical inclusive or of its two operand
 {{{
 For an 'or' instruction 'n':
 
-  <n->ssa> = or <LHSin->resultType> <encodeValue(LHSin)>, <encodeValue(RHSin)>         
+  <n->ssa> = or <encodeType(LHSin->resultType)> <encodeValue(LHSin)>, <encodeValue(RHSin)>         
 }}}
