@@ -5,7 +5,7 @@
 
 === LLVM Program Basics ===
 
-A Simplified description of a LLVM IR program is as follows. Further reading of the LLVM Assembly Language Reference Manual is reccomended.
+A Simplified description of a LLVM IR program is as follows. Further reading of the [http://llvm.org/docs/LangRef.html#highlevel High Level Structure Section] of the LLVM Assembly Language Reference Manual is reccomended.
 
   * A *[L_Program program]* consists of a number of *[L_Module modules]*.
 Each of these *modules* can contain a number of *global values* and named *metadata* entries.
