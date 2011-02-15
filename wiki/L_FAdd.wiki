@@ -31,6 +31,6 @@ The value produced is the floating point sum of the two operands.
 {{{
 For a fadd instruction 'n':
 
-  <n->ssa> = fadd <LHSin->resultType> <encodeValue(LHSin)>, <encodeValue(RHSin)>    
+  <n->ssa> = fadd <encodeType(LHSin->resultType)> <encodeValue(LHSin)>, <encodeValue(RHSin)>    
     
 }}}
