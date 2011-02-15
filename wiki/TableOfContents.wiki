@@ -25,6 +25,12 @@
         * [L_SRem 'srem' Instruction]
         * [L_FRem 'frem' Instruction]
       * *Bitwise Binary Operations*
+        * [L_Shl 'shl' Instruction]
+        * [L_LShr 'lshr' Instruction]
+        * [L_AShr 'ashr' Instruction]
+        * [L_And 'and' Instruction]
+        * [L_Or 'or' Instruction]
+        * [L_Xor 'xor' Instruction]
       * *Vector Operations*
       * *Aggregate Operations*
       * *Memory Access and Addressing Operations*
