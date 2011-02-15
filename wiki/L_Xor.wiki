@@ -31,5 +31,5 @@ The 'xor' instruction returns the bitwise logical exclusive or of its two operan
 {{{
 For an 'xor' instruction 'n':
 
-  <n->ssa> = xor <LHSin->resultType> <encodeValue(LHSin)>, <encodeValue(RHSin)>         
+  <n->ssa> = xor <encodeType(LHSin->resultType)> <encodeValue(LHSin)>, <encodeValue(RHSin)>         
 }}}
