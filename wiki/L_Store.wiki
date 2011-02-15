@@ -26,11 +26,11 @@ For further information see the LLVM Assembly Reference Manual - [http://llvm.or
 
 *Arguments:*
 
-There are two arguments to the 'store' instruction: a value to store and an address at which to store it. The type of the '<pointer>' operand must be a pointer to the first class type of the '<value>' operand. If the store is marked as volatile, then the optimizer is not allowed to modify the number or order of execution of this store with other volatile operations.
+There are two arguments to the 'store' instruction: a value to store and an address at which to store it. The type of the '`<`pointer>' operand must be a pointer to the first class type of the '`<`value>' operand. If the store is marked as volatile, then the optimizer is not allowed to modify the number or order of execution of this store with other volatile operations.
 
 The optional constant "align" argument specifies the alignment of the operation (that is, the alignment of the memory address). A value of 0 or an omitted "align" argument means that the operation has the preferential alignment for the target. It is the responsibility of the code emitter to ensure that the alignment information is correct. Overestimating the alignment results in an undefined behavior. Underestimating the alignment may produce less efficient code. An alignment of 1 is always safe.
 
-The optional !nontemporal metadata must reference a single metatadata name <index> corresponding to a metadata node with one i32 entry of value 1. The existence of the !nontemporal metatadata on the instruction tells the optimizer and code generator that this load is not expected to be reused in the cache. The code generator may select special instructions to save cache bandwidth, such as the MOVNT instruction on x86.
+The optional !nontemporal metadata must reference a single metatadata name `<`index> corresponding to a metadata node with one i32 entry of value 1. The existence of the !nontemporal metatadata on the instruction tells the optimizer and code generator that this load is not expected to be reused in the cache. The code generator may select special instructions to save cache bandwidth, such as the MOVNT instruction on x86.
 
 *Semantics:*
 
@@ -38,7 +38,7 @@ The contents of memory are updated to contain '<value>' at the location specifie
 
 *Emitted LLVM IR:*
 {{{
-For an load instruction 'n':
+For a store instruction 'n':
 
   <n->ssa> = [volatile ]store <encodeType(value->resultType)> <encodeValue(value)>, 
              <encodeType(pointer->resultType)> <encodeValue(pointer)>
