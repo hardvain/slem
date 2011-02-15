@@ -41,6 +41,8 @@ The location of memory pointed to is loaded. If the value being loaded is of sca
 {{{
 For an load instruction 'n':
 
-  <n->ssa> = [volatile ]load <encodeType(typ)> <encodeValue(pointer)>[, align <alignment>][, !nontemporal !<index>]  
+  <n->ssa> = [volatile ]load <encodeType(typ)> <encodeValue(pointer)>
+             [, align <alignment>]
+             [, !nontemporal !<index>]  
 
 }}}
