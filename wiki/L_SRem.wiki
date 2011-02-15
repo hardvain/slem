@@ -35,5 +35,5 @@ Taking the remainder of a division by zero leads to undefined behavior. Overflow
 {{{
 For a srem instruction 'n':
 
-  <n->ssa> = srem <LHSin->resultType> <encodeValue(LHSin)>, <encodeValue(RHSin)>         
+  <n->ssa> = srem <encodeType(LHSin->resultType)> <encodeValue(LHSin)>, <encodeValue(RHSin)>         
 }}}
