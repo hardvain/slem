@@ -31,5 +31,5 @@ The value produced is the floating point quotient of the two operands.
 {{{
 For a fdiv instruction 'n':
 
-  <n->ssa> = fdiv <LHSin->resultType> <encodeValue(LHSin)>, <encodeValue(RHSin)>         
+  <n->ssa> = fdiv <encodeType(LHSin->resultType)> <encodeValue(LHSin)>, <encodeValue(RHSin)>         
 }}}
