@@ -31,6 +31,6 @@ The value produced is the floating point product of the two operands.
 {{{
 For a fmul instruction 'n':
 
-  <n->ssa> = fmul <LHSin->resultType> <encodeValue(LHSin)>, <encodeValue(RHSin)>    
+  <n->ssa> = fmul <encodeType(LHSin->resultType)> <encodeValue(LHSin)>, <encodeValue(RHSin)>    
     
 }}}
