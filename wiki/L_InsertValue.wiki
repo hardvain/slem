@@ -5,7 +5,10 @@
 
 
 
-case class L_InsertValue(value : L_Value, elt : L_Value, idx : L_Value) extends L_Instruction with L_Value
+case class L_InsertValue(value : L_Value, 
+                           elt : L_Value, 
+                           idx : L_Value) 
+           extends L_Instruction with L_Value
 
 
 
