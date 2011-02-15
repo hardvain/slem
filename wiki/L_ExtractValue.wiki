@@ -5,7 +5,9 @@
 
 
 
-case class L_ExtractValue(value : L_Value, indexes : List[L_Int]) extends L_Instruction with L_Value
+case class L_ExtractValue(value : L_Value, 
+                        indexes : List[L_Int]) 
+           extends L_Instruction with L_Value
 
 
 
