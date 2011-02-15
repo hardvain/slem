@@ -10,6 +10,22 @@ case class L_Shl(LHSin : L_Value, RHSin : L_Value) extends L_BinOpInstruction(LH
     override val instructionString = "shl"
 }
 
+case class L_NUWShl(LHSin : L_Value, RHSin : L_Value) extends L_BinOpInstruction(LHSin, RHSin) 
+{
+    override val instructionString = "shl nuw"
+}
+
+case class L_NSWShl(LHSin : L_Value, RHSin : L_Value) extends L_BinOpInstruction(LHSin, RHSin) 
+{
+    override val instructionString = "shl nsw"
+}
+
+case class L_NUWNSWShl(LHSin : L_Value, RHSin : L_Value) extends L_BinOpInstruction(LHSin, RHSin) 
+{
+    override val instructionString = "shl nuw nsw"
+}
+
+
 
 }}}
 
@@ -35,5 +51,8 @@ If the nuw keyword is present, then the shift produces a trap value if it shifts
 {{{
 For a shl instruction 'n':
 
-  <n->ssa> = shl <LHSin->resultType> <encodeValue(LHSin)>, <encodeValue(RHSin)>         
+  <n->ssa> = shl <LHSin->resultType> <encodeValue(LHSin)>, <encodeValue(RHSin)>     
+  <n->ssa> = shl nuw <LHSin->resultType> <encodeValue(LHSin)>, <encodeValue(RHSin)>    
+  <n->ssa> = shl nsw <LHSin->resultType> <encodeValue(LHSin)>, <encodeValue(RHSin)>    
+  <n->ssa> = shl nuw nsw <LHSin->resultType> <encodeValue(LHSin)>, <encodeValue(RHSin)>        
 }}}
