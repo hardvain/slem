@@ -37,7 +37,7 @@ If the exact keyword is present, the result value of the lshr is a trap value if
 
 *Emitted LLVM IR:*
 {{{
-For a frem instruction 'n':
+For a lshr instruction 'n':
 
   <n->ssa> = lshr <LHSin->resultType> <encodeValue(LHSin)>, <encodeValue(RHSin)>  
   <n->ssa> = lshr exact <LHSin->resultType> <encodeValue(LHSin)>, <encodeValue(RHSin)>       
