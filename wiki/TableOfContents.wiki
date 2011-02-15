@@ -2,7 +2,7 @@
 
   * [LLVMBasics SLEM Basics]
     * [LLVMBasics Introduction]
-  * SLEM LLVM Tree Reference
+  * [LLVMTreeRef SLEM LLVM Tree Reference]
     * [L_Program Programs]
     * [L_Module Modules]
     * [L_Global Globals]
