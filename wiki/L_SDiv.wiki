@@ -43,6 +43,6 @@ If the exact keyword is present, the result value of the sdiv is a trap value if
 {{{
 For a sdiv instruction 'n':
 
-  <n->ssa> = sdiv <LHSin->resultType> <encodeValue(LHSin)>, <encodeValue(RHSin)>    
-  <n->ssa> = sdiv exact <LHSin->resultType> <encodeValue(LHSin)>, <encodeValue(RHSin)>      
+  <n->ssa> = sdiv <encodeType(LHSin->resultType)> <encodeValue(LHSin)>, <encodeValue(RHSin)>    
+  <n->ssa> = sdiv exact <encodeType(LHSin->resultType)> <encodeValue(LHSin)>, <encodeValue(RHSin)>      
 }}}
