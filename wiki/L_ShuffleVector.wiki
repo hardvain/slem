@@ -5,7 +5,10 @@
 
 
 
-case class L_ShuffleVector(v1 : L_Value, v2 : L_Value, mask : L_Value) extends L_Instruction with L_Value
+case class L_ShuffleVector(v1 : L_Value, 
+                           v2 : L_Value, 
+                         mask : L_Value) 
+           extends L_Instruction with L_Value
 
 
 
