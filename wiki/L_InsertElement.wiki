@@ -5,7 +5,10 @@
 
 
 
-case class L_InsertElement(vec : L_Value, elt : L_Value, idx : L_Value) extends L_Instruction with L_Value
+case class L_InsertElement(vec : L_Value, 
+                           elt : L_Value, 
+                           idx : L_Value) 
+           extends L_Instruction with L_Value
 
 
 
@@ -29,7 +32,7 @@ The result is a vector of the same type as vec. Its element values are those of 
 
 *Emitted LLVM IR:*
 {{{
-For a extractelement instruction 'n':
+For a insertelement instruction 'n':
 
   <n->ssa> = insertelement <encodeType(vec->resulttype)> <encodeValue(vec)>, 
              <encodeType(elt->resultType)> <encodeValue(elt)>, i32 <encodeValue(idx)>
