@@ -1,7 +1,7 @@
 #summary Constructing a basic LLVM IR program.
 #sidebar TableOfContents
 
-=Constructing A LLVM IR Program=
+=LLVM High Level Structure=
 
 === LLVM Program Basics ===
 
