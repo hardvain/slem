@@ -35,5 +35,5 @@ Taking the remainder of a division by zero leads to undefined behavior.
 {{{
 For a urem instruction 'n':
 
-  <n->ssa> = urem <LHSin->resultType> <encodeValue(LHSin)>, <encodeValue(RHSin)>         
+  <n->ssa> = urem <encodeType(LHSin->resultType)> <encodeValue(LHSin)>, <encodeValue(RHSin)>         
 }}}
