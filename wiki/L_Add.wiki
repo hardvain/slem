@@ -49,8 +49,8 @@ nuw and nsw stand for "No Unsigned Wrap" and "No Signed Wrap", respectively. If 
 {{{
 For an add instruction 'n':
 
-  <n->ssa> = add <LHSin->resultType> <encodeValue(LHSin)>, <encodeValue(RHSin)>        
-  <n->ssa> = add nuw <LHSin->resultType> <encodeValue(LHSin)>, <encodeValue(RHSin)>    
-  <n->ssa> = add nsw <LHSin->resultType> <encodeValue(LHSin)>, <encodeValue(RHSin)>    
-  <n->ssa> = add nuw nsw <LHSin->resultType> <encodeValue(LHSin)>, <encodeValue(RHSin)>
+  <n->ssa> = add <encodeType(LHSin->resultType)> <encodeValue(LHSin)>, <encodeValue(RHSin)>        
+  <n->ssa> = add nuw <encodeType(LHSin->resultType)> <encodeValue(LHSin)>, <encodeValue(RHSin)>    
+  <n->ssa> = add nsw <encodeType(LHSin->resultType)> <encodeValue(LHSin)>, <encodeValue(RHSin)>    
+  <n->ssa> = add nuw nsw <encodeType(LHSin->resultType)> <encodeValue(LHSin)>, <encodeValue(RHSin)>
 }}}
