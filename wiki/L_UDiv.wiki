@@ -43,6 +43,6 @@ If the exact keyword is present, the result value of the udiv is a trap value if
 {{{
 For a udiv instruction 'n':
 
-  <n->ssa> = udiv <LHSin->resultType> <encodeValue(LHSin)>, <encodeValue(RHSin)>    
-  <n->ssa> = udiv exact <LHSin->resultType> <encodeValue(LHSin)>, <encodeValue(RHSin)>      
+  <n->ssa> = udiv <encodeType(LHSin->resultType)> <encodeValue(LHSin)>, <encodeValue(RHSin)>    
+  <n->ssa> = udiv exact <encodeType(LHSin->resultType)> <encodeValue(LHSin)>, <encodeValue(RHSin)>      
 }}}
