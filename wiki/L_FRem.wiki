@@ -31,5 +31,5 @@ This instruction returns the remainder of a division. The remainder has the same
 {{{
 For a frem instruction 'n':
 
-  <n->ssa> = frem <LHSin->resultType> <encodeValue(LHSin)>, <encodeValue(RHSin)>         
+  <n->ssa> = frem <encodeType(LHSin->resultType)> <encodeValue(LHSin)>, <encodeValue(RHSin)>         
 }}}
