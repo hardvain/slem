@@ -31,5 +31,5 @@ The 'and' instruction returns the bitwise logical and of its two operands.
 {{{
 For an 'and' instruction 'n':
 
-  <n->ssa> = and <LHSin->resultType> <encodeValue(LHSin)>, <encodeValue(RHSin)>         
+  <n->ssa> = and <encodeType(LHSin->resultType)> <encodeValue(LHSin)>, <encodeValue(RHSin)>         
 }}}
