@@ -37,6 +37,6 @@ The switch instruction specifies a table of values and destinations. When the 's
 For a switch terminator instruction:
 
   switch <encodeType(value->resultType)> <encodeValue(value)>, label <encodeValue(defaultdest)> 
-    [ <encodeType(cases(1)->resultType)> <encodeValue(cases(1).val)>,  
-    label <encodeValue(cases(1).dest)> ... ]
+        [ <encodeType(cases(1)->resultType)> <encodeValue(cases(1).val)>,  
+          label <encodeValue(cases(1).dest)> ... ]
 }}}
