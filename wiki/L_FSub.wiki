@@ -31,6 +31,6 @@ The value produced is the floating point difference of the two operands.
 {{{
 For a fsub instruction 'n':
 
-  <n->ssa> = fsub <LHSin->resultType> <encodeValue(LHSin)>, <encodeValue(RHSin)>    
+  <n->ssa> = fsub <encodeType(LHSin->resultType)> <encodeValue(LHSin)>, <encodeValue(RHSin)>    
     
 }}}
