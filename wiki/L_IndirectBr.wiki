@@ -31,7 +31,7 @@ Control transfers to the block specified in the address argument. All possible d
 
 *Emitted LLVM IR:*
 {{{
-For a switch terminator instruction:
+For a indirectbr terminator instruction:
 
   indirectbr <encodeType(address->resultType)> <encodeValue(address)>
         [ label <encodeValue(possibleDestinations(1).dest)> , ... ]
