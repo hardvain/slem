@@ -1,7 +1,7 @@
 #summary SLEM Wiki TOC
 
   * [LLVMTreeRef SLEM LLVM Tree Reference]
-    * [LLVMBasics High Level Structure]
+  *   [LLVMBasics High Level Structure]
       * [L_Program Programs]
       * [L_Module Modules]
       * [L_Global Globals]
