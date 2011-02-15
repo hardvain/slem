@@ -28,7 +28,7 @@ When the 'ret' instruction is executed, control flow returns back to the calling
 
 *Emitted LLVM IR:*
 {{{
-For a ret instruction 'n':
+For a ret terminator instruction:
 
-  <n->ssa> = ret <rvalue->resultType> <encodeValue(rvalue)>
+  ret <rvalue->resultType> <encodeValue(rvalue)>
 }}}
