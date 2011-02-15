@@ -41,6 +41,6 @@ If the exact keyword is present, the result value of the ashr is a trap value if
 {{{
 For an ashr instruction 'n':
 
-  <n->ssa> = ashr <LHSin->resultType> <encodeValue(LHSin)>, <encodeValue(RHSin)>  
-  <n->ssa> = ashr exact <LHSin->resultType> <encodeValue(LHSin)>, <encodeValue(RHSin)>       
+  <n->ssa> = ashr <encodeType(LHSin->resultType)> <encodeValue(LHSin)>, <encodeValue(RHSin)>  
+  <n->ssa> = ashr exact <encodeType(LHSin->resultType)> <encodeValue(LHSin)>, <encodeValue(RHSin)>       
 }}}
