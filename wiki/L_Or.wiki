@@ -25,7 +25,7 @@ The two arguments to the 'or' instruction must be integer or vector of integer v
 
 *Semantics:*
 
-The 'or' instruction returns the bitwise logical and of its two operands.
+The 'or' instruction returns the bitwise logical inclusive or of its two operands.
 
 *Emitted LLVM IR:*
 {{{
