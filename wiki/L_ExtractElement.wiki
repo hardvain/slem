@@ -31,5 +31,5 @@ The result is a scalar of the same type as the element type of vec. Its value is
 {{{
 For a extractelement instruction 'n':
 
-  <n->ssa> = extractelement <encodeType(vec->resultType)> <vec>, i32 <idx>
+  <n->ssa> = extractelement <encodeType(vec->resultType)> <encodeValue(vec)>, i32 <encodeValue(idx)>
 }}}
