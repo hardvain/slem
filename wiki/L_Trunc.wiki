@@ -5,7 +5,9 @@
 
 
 
-case class L_Trunc(valuein : L_Value, targetTypein : L_Type) extends L_ConversionOperation(valuein, targetTypein)
+case class L_Trunc(valuein : L_Value, 
+              targetTypein : L_Type) 
+           extends L_ConversionOperation(valuein, targetTypein)
 {
     override val instructionString = "trunc"
 }
@@ -33,6 +35,7 @@ The 'trunc' instruction truncates the high order bits in value and converts the 
 {{{
 For a 'trunc' instruction 'n':
 
-  <n->ssa> = trunc <encodeType(valuein->resultType)> <encodeValue(valuein)>, <encodeType(targetTypein)>    
+  <n->ssa> = trunc <encodeType(valuein->resultType)> <encodeValue(valuein)>, 
+             <encodeType(targetTypein)>    
     
 }}}
