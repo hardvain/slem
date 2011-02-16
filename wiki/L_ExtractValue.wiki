@@ -39,6 +39,7 @@ The result is the value at the position in the aggregate specified by the index 
 {{{
 For a extractvalue instruction 'n':
 
-  <n->ssa> = extractvalue <encodeType(val->resultType)> <encodeValue(val)>, <encodeValue(idx)>{, <encodeValue(idx)>}*
+  <n->ssa> = extractvalue <encodeType(val->resultType)> <encodeValue(val)>, 
+             <encodeValue(idx)>{, <encodeValue(idx)>}*
 
 }}}
