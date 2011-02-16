@@ -36,6 +36,7 @@ va_arg is an LLVM instruction instead of an intrinsic function because it takes 
 {{{
 For a 'va_arg' instruction 'n':
 
-  <n->ssa> = va_arg <encodeType(argList->resultType)> <encodeValue(argList)>, <encodeType(argType)>    
+  <n->ssa> = va_arg <encodeType(argList->resultType)> <encodeValue(argList)>, 
+             <encodeType(argType)>    
     
 }}}
