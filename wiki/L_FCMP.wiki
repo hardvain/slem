@@ -119,7 +119,7 @@ Each of val1 and val2 arguments must be either a floating point type or a vector
 
 The 'fcmp' instruction compares op1 and op2 according to the condition code given as cond. If the operands are vectors, then the vectors are compared element by element. Each comparison performed always yields an i1 result, as follows:
 
-false: always yields false, regardless of operands.
+ # false: always yields false, regardless of operands.
  # oeq: yields true if both operands are not a QNAN and op1 is equal to op2.
  # ogt: yields true if both operands are not a QNAN and op1 is greater than op2.
  # oge: yields true if both operands are not a QNAN and op1 is greater than or equal to op2.
