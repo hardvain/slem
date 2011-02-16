@@ -37,10 +37,8 @@ At runtime, the 'phi' instruction logically takes on the value specified by the 
 For a 'phi' instruction 'n':
 
   <n->ssa> = phi <encodeType(valueLabels(0)->resultType)>  
-             [<encodeValue(valueLabels(0).value)>
-<encodeLavel(valueLabels(0).label)>],
-             [<encodeValue(valueLabels(1).value)>
-<encodeLavel(valueLabels(1).label)>],
+             [<encodeValue(valueLabels(0).value)> <encodeLabel(valueLabels(0).label)>],
+             [<encodeValue(valueLabels(1).value)> <encodeLabel(valueLabels(1).label)>],
              ...
  
     
