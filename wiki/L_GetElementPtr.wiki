@@ -27,6 +27,6 @@ For further information see the LLVM Assembly Reference Manual - [http://llvm.or
 For a getelementptr instruction 'n':
 
   <n->ssa> = getelementptr [inbounds ] <encodeType(pty)> <encodeValue(pval)>, 
-             {<encodeType(typeIndexes(0)->resultType)> <encodeValue(typeIndexes(0)>}*
+             {<encodeType(typeIndexes(0)->resultType)> <encodeValue(typeIndexes(0))>}*
 
 }}}
