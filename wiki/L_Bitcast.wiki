@@ -21,7 +21,7 @@ case class L_Bitcast(valuein : L_Value,
 
 Constructs an 'bitcast .. to' instruction.
 
-The 'bitcast' instruction converts value to type ty2 without changing any bits.
+The 'bitcast' instruction converts value to the target type without changing any bits.
 
 For further information see the LLVM Assembly Reference Manual - [http://llvm.org/docs/LangRef.html#i_bitcast 'bitcast .. to' Instruction]
 
