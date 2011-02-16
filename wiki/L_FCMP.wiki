@@ -1,0 +1,148 @@
+#sidebar TableOfContents
+
+
+{{{
+
+
+
+abstract class L_FCMP(LHSin : L_Value, 
+                      RHSin : L_Value, 
+                 compCodein : String) 
+               extends L_Instruction with L_Value
+{
+    val LHS = LHSin
+    val RHS = RHSin
+    val compCode = compCodein
+}	
+case class L_FCmpFalse(LHSin : L_Value, 
+                       RHSin : L_Value) 
+           extends L_FCMP(LHSin, RHSin, "false")
+    
+case class L_FCmpOEQ(LHSin : L_Value, 
+                     RHSin : L_Value) 
+           extends L_FCMP(LHSin, RHSin, "oeq")
+    
+case class L_FCmpOGT(LHSin : L_Value, 
+                     RHSin : L_Value) 
+           extends L_FCMP(LHSin, RHSin, "ogt")
+    
+case class L_FCmpOGE(LHSin : L_Value, 
+                     RHSin : L_Value) 
+           extends L_FCMP(LHSin, RHSin, "oge")
+    
+case class L_FCmpOLT(LHSin : L_Value, 
+                     RHSin : L_Value) 
+           extends L_FCMP(LHSin, RHSin, "olt")
+    
+case class L_FCmpONE(LHSin : L_Value, 
+                     RHSin : L_Value) 
+           extends L_FCMP(LHSin, RHSin, "one")
+    
+case class L_FCmpORD(LHSin : L_Value, 
+                     RHSin : L_Value) 
+           extends L_FCMP(LHSin, RHSin, "ord")
+    
+case class L_FCmpUEQ(LHSin : L_Value, 
+                     RHSin : L_Value) 
+           extends L_FCMP(LHSin, RHSin, "ueq")
+    
+case class L_FCmpUGT(LHSin : L_Value, 
+                     RHSin : L_Value) 
+           extends L_FCMP(LHSin, RHSin, "ugt")
+    
+case class L_FCmpUGE(LHSin : L_Value, 
+                     RHSin : L_Value) 
+           extends L_FCMP(LHSin, RHSin, "uge")
+    
+case class L_FCmpULT(LHSin : L_Value, 
+                     RHSin : L_Value) 
+           extends L_FCMP(LHSin, RHSin, "ult")
+    
+case class L_FCmpULE(LHSin : L_Value, 
+                     RHSin : L_Value) 
+           extends L_FCMP(LHSin, RHSin, "ule")
+    
+case class L_FCmpUNE(LHSin : L_Value, 
+                     RHSin : L_Value) 
+           extends L_FCMP(LHSin, RHSin, "une")
+    
+case class L_FCmpUNO(LHSin : L_Value, 
+                     RHSin : L_Value) 
+           extends L_FCMP(LHSin, RHSin, "uno")
+    
+case class L_FCmpTrue(LHSin : L_Value, 
+                      RHSin : L_Value) 
+           extends L_FCMP(LHSin, RHSin, "true")
+
+
+
+}}}
+
+*Overview:*
+
+Constructs an 'fcmp' instruction.
+
+The 'fcmp' instruction returns a boolean value or vector of boolean values based on comparison of its operands.
+
+If the operands are floating point scalars, then the result type is a boolean (i1).
+
+If the operands are floating point vectors, then the result type is a vector of boolean with the same number of elements as the operands being compared.
+
+For further information see the LLVM Assembly Reference Manual - [http://llvm.org/docs/LangRef.html#i_icmp 'icmp' Instruction]
+
+*Arguments:*
+
+The 'fcmp' instruction takes three operands. The first operand is the condition code indicating the kind of comparison to perform. It is not a value, just a keyword. The possible condition code are:
+
+ # false: no comparison, always returns false
+ # oeq: ordered and equal
+ # ogt: ordered and greater than
+ # oge: ordered and greater than or equal
+ # olt: ordered and less than
+ # ole: ordered and less than or equal
+ # one: ordered and not equal
+ # ord: ordered (no nans)
+ # ueq: unordered or equal
+ # ugt: unordered or greater than
+ # uge: unordered or greater than or equal
+ # ult: unordered or less than
+ # ule: unordered or less than or equal
+ # une: unordered or not equal
+ # uno: unordered (either nans)
+ # true: no comparison, always returns true
+
+Ordered means that neither operand is a QNAN while unordered means that either operand may be a QNAN.
+
+Each of val1 and val2 arguments must be either a floating point type or a vector of floating point type. They must have identical types.
+
+*Semantics:*
+
+The 'fcmp' instruction compares op1 and op2 according to the condition code given as cond. If the operands are vectors, then the vectors are compared element by element. Each comparison performed always yields an i1 result, as follows:
+
+false: always yields false, regardless of operands.
+ # oeq: yields true if both operands are not a QNAN and op1 is equal to op2.
+ # ogt: yields true if both operands are not a QNAN and op1 is greater than op2.
+ # oge: yields true if both operands are not a QNAN and op1 is greater than or equal to op2.
+ # olt: yields true if both operands are not a QNAN and op1 is less than op2.
+ # ole: yields true if both operands are not a QNAN and op1 is less than or equal to op2.
+ # one: yields true if both operands are not a QNAN and op1 is not equal to op2.
+ # ord: yields true if both operands are not a QNAN.
+ # ueq: yields true if either operand is a QNAN or op1 is equal to op2.
+ # ugt: yields true if either operand is a QNAN or op1 is greater than op2.
+ # uge: yields true if either operand is a QNAN or op1 is greater than or equal to op2.
+ # ult: yields true if either operand is a QNAN or op1 is less than op2.
+ # ule: yields true if either operand is a QNAN or op1 is less than or equal to op2.
+ # une: yields true if either operand is a QNAN or op1 is not equal to op2.
+ # uno: yields true if either operand is a QNAN.
+ # true: always yields true, regardless of operands.
+
+Note that the code generator does not yet support vector types with the fcmp instruction.
+
+*Emitted LLVM IR:*
+{{{
+For a 'fcmp' instruction 'n':
+
+  <n->ssa> = fcmp <compCode> <encodeType(LHSin->resultType)> <encodeValue(LHSin)>, 
+             <encodeValue(RHSin)>    
+    
+}}}
