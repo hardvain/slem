@@ -23,7 +23,7 @@ Constructs an 'ptrtoint .. to' instruction.
 
 The 'ptrtoint' instruction converts the pointer value to the integer target type.
 
-For further information see the LLVM Assembly Reference Manual - [http://llvm.org/docs/LangRef.html#i_sitofp 'ptrtoint .. to' Instruction]
+For further information see the LLVM Assembly Reference Manual - [http://llvm.org/docs/LangRef.html#i_ptrtoint 'ptrtoint .. to' Instruction]
 
 *Arguments:*
 
