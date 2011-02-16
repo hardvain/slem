@@ -293,6 +293,11 @@ object IRTree {
     {
         override val instructionString = "udiv"
     }
+    
+    case class L_ExactUDiv(LHSin : L_Value, RHS : L_Value) extends L_BinOpInstruction(LHSin, RHSin)
+    {
+        override val instructionString = "udiv exact"
+    }
             
     case class L_SDiv(LHSin : L_Value, RHSin : L_Value) extends L_BinOpInstruction(LHSin, RHSin) 
     {
@@ -329,15 +334,40 @@ object IRTree {
         override val instructionString = "shl"
     }
     
+    case class L_NUWShl(LHSin : L_Value, RHSin : L_Value) extends L_BinOpInstruction(LHSin, RHSin) 
+    {
+        override val instructionString = "shl nuw"
+    }
+    
+    case class L_NSWShl(LHSin : L_Value, RHSin : L_Value) extends L_BinOpInstruction(LHSin, RHSin) 
+    {
+        override val instructionString = "shl nsw"
+    }
+    
+    case class L_NUWNSWShl(LHSin : L_Value, RHSin : L_Value) extends L_BinOpInstruction(LHSin, RHSin) 
+    {
+        override val instructionString = "shl nuw nsw"
+    }
+    
     case class L_LShr(LHSin : L_Value, RHSin : L_Value) extends L_BinOpInstruction(LHSin, RHSin) 
     {
         override val instructionString = "lshr"
+    }
+
+    case class L_ExactLShr(LHSin : L_Value, RHSin : L_Value) extends L_BinOpInstruction(LHSin, RHSin) 
+    {
+        override val instructionString = "lshr exact"
     }
     
     case class L_AShr(LHSin : L_Value, RHSin : L_Value) extends L_BinOpInstruction(LHSin, RHSin) 
     {
         override val instructionString = "ashr"
     }
+
+    case class L_ExactAShr(LHSin : L_Value, RHSin : L_Value) extends L_BinOpInstruction(LHSin, RHSin) 
+    {
+        override val instructionString = "ashr exact"
+    }    
     
     case class L_And(LHSin : L_Value, RHSin : L_Value) extends L_BinOpInstruction(LHSin, RHSin) 
     {
@@ -358,10 +388,10 @@ object IRTree {
     ////////////MEMORY INSTRUCTIONS////////////
     case class L_Alloca(typ : L_Type, numElements : L_Value = null, alignment : Long = 0) extends L_Instruction with L_Value
 
-    //TODO : need to implement metadata in order to make this fully functional. , nonTemporal : Boolean = false, nonTempIndex : Long = 0
+    //DONE : need to implement metadata in order to make this fully functional. , nonTemporal : Boolean = false, nonTempIndex : Long = 0
     case class L_Load(typ : L_Type, pointer : L_Value, isVolatile : Boolean = false, alignment : Long = 0) extends L_Instruction with L_Value
 
-    //TODO : need to implement metadata in order to make this fully functional., nonTemporal : Boolean = false, nonTempIndex : Long = 0
+    //DONE : need to implement metadata in order to make this fully functional., nonTemporal : Boolean = false, nonTempIndex : Long = 0
     case class L_Store(value : L_Value, pointer : L_Value, isVolatile : Boolean = false, alignment : Long = 0) extends L_Instruction
     
     case class L_TypeIndex(ty : L_Type, idx : L_Value) extends L_Node
@@ -743,6 +773,7 @@ object IRTree {
             case n : L_NUWMul         => (n.LHS)->resultType
             case n : L_FMul           => (n.LHS)->resultType
             case n : L_UDiv           => (n.LHS)->resultType
+            case n : L_ExactUDiv      => (n.LHS)->resultType
             case n : L_SDiv           => (n.LHS)->resultType
             case n : L_ExactSDiv      => (n.LHS)->resultType
             case n : L_FDiv           => (n.LHS)->resultType
