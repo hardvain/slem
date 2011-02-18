@@ -16,6 +16,7 @@
 
 }}}
 
+LLVM Manual Reference: [http://llvm.org/docs/LangRef.html#functionstructure Function Structure]
 
 A function declaration consists of a return [L_Type type].
 
