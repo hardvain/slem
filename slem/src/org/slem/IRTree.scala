@@ -122,10 +122,12 @@ object IRTree {
     implicit def valueToArgument(valuein : L_Value) : L_Argument = L_Argument(valuein->resultType, value = valuein)
     implicit def typeToArgument(typ : L_Type) : L_Argument = L_Argument(typ)
     
+    /* Deprecated - unnessacary
     def L_NamedArgument(valuein : L_Value, namein : String) : L_Argument =
     {
         new L_Argument(valuein->resultType, value = valuein, argName = namein)
     }
+    */
     
     ////////////TYPES////////////
     abstract class L_Type
@@ -145,7 +147,7 @@ object IRTree {
     case class L_ArrayType(numElements : Long, elementType : L_Type) extends L_Type
     case class L_FunctionType(returnType : L_Type, parameterList : List[L_Type]) extends L_Type
     case class L_StructureType(fields : List[L_Type]) extends L_Type
-    case class L_PackagedStructureType(fields : List[L_Type]) extends L_Type
+    case class L_PackedStructureType(fields : List[L_Type]) extends L_Type
     case class L_PointerType(pointer : L_Type) extends L_Type
     case class L_VectorType(numElements : Long, elementType : L_Type) extends L_Type
     case class L_OpaqueType() extends L_Type
@@ -186,11 +188,17 @@ object IRTree {
     case class L_Double(value : String) extends L_Constant
     implicit def doubltToConst(d : Double) : L_Double = L_Double("" + d)
     
+    case class L_FP128(value : String) extends L_Constant
+    case class L_X86FP80(value : String) extends L_Constant
+    case class L_PPCFP128(value : String) extends L_Constant
+    
+    
     case class L_NullPointer(pty : L_Type) extends L_Constant
     
     case class L_Void() extends L_Constant
     
     ////////////COMPLEX CONSTANT VALUES////////////
+    case class L_PackedStructure(elements : List[L_Value]) extends L_Constant
     case class L_Structure(elements : List[L_Value]) extends L_Constant
     case class L_Array(elements : List[L_Value]) extends L_Constant
     case class L_String(s : String) extends L_Constant
@@ -394,9 +402,11 @@ object IRTree {
     //DONE : need to implement metadata in order to make this fully functional., nonTemporal : Boolean = false, nonTempIndex : Long = 0
     case class L_Store(value : L_Value, pointer : L_Value, isVolatile : Boolean = false, alignment : Long = 0) extends L_Instruction
     
+    /* Deprecated - we can simply infer the type from the values
     case class L_TypeIndex(ty : L_Type, idx : L_Value) extends L_Node
     implicit def longToTypeIndex(l : Long) : L_TypeIndex = L_TypeIndex(L_IntType(64), l)
     implicit def intToTypeIndex(i : Int) : L_TypeIndex = L_TypeIndex(L_IntType(32), i)
+    */
     
     case class L_GetElementPtr(pty : L_Type, pval : L_Value, typeIndexes : List[L_Value], inBounds : Boolean = false) extends L_Instruction with L_Value
     {
@@ -404,119 +414,192 @@ object IRTree {
         {
             getResultType(pty, typeIndexes, List())
         }
-        def getResultType(ptype : L_Type, indexes : List[L_Value], prevPtrTypeList : List[L_Type]) : L_Type =
+        
+        def dereferenceUpRef(upref : L_UpReferenceType, prevPtrTypeList : List[L_Type]) : L_Type =
         {
+            if(upref.levels == 1)
+            {
+                return L_PointerType(upref);
+            }
+            else if(upref.levels > 1)
+            {
+                if(prevPtrTypeList.length - upref.levels >= 0)
+                {
+                    return prevPtrTypeList(prevPtrTypeList.length - upref.levels)
+                }
+                else
+                {
+                    return L_OpaqueType() //Type error has occured
+                }                            
+            }
+            else
+            {
+                L_OpaqueType() //Type error has occured
+            }
+        }
+        
+        def getResultType(ptypein : L_Type, indexes : List[L_Value], prevPtrTypeListin : List[L_Type]) : L_Type =
+        {
+            var ptype = ptypein
+            var prevPtrTypeList = prevPtrTypeListin
+            //Dereference any type up-references:
             ptype match
             {
-                case t : L_ArrayType =>
-                {
-                    val nextType = t.elementType
-                    val idxTail = indexes.tail
-                    if(idxTail.size > 0)
-                    {
-                        getResultType(nextType, idxTail, prevPtrTypeList ::: List(t))
-                    }
-                    else
-                    {
-                        L_PointerType(nextType)
-                    }
-                }
-                case t : L_VectorType =>
-                {
-                    val nextType = t.elementType
-                    val idxTail = indexes.tail
-                    if(idxTail.size > 0)
-                    {
-                        getResultType(nextType, idxTail, prevPtrTypeList ::: List(t))
-                    }
-                    else
-                    {
-                        L_PointerType(nextType)
-                    }
-                }
-                case t : L_PointerType =>
-                {
-                    val nextType = t.pointer
-                    val idxTail = indexes.tail
-                    if(idxTail.size > 0)
-                    {
-                        getResultType(nextType, idxTail, prevPtrTypeList ::: List(t))
-                    }
-                    else
-                    {
-                        L_PointerType(nextType)
-                    }
-                }
-                case t : L_StructureType =>
-                {
-                    indexes.head match
-                    {
-                        case c : L_Int =>
-                        {
-                            val nextType = t.fields(c.value.toInt) 			// We can convert this to an int because
-                                                                            // a structure with more than max_int fields
-                                                                            // is ludicrously large  - and useless - the 
-                                                                            // source code would have to define over max_int 
-                                                                            // fields one by one!
-                            val idxTail = indexes.tail
-                            if(idxTail.size > 0)
-                            {
-                                getResultType(nextType, idxTail, prevPtrTypeList ::: List(t))
-                            }
-                            else
-                            {
-                                L_PointerType(nextType)
-                            }
-                        }
-                        case _ =>
-                        {
-                            L_OpaqueType() //Type error has occured
-                        }
-                    }					
-                }
                 case t : L_UpReferenceType =>
                 {
                     if(t.levels == 1)
                     {
-                        return t;
+                        return L_PointerType(t);
                     }
                     else if(t.levels > 1)
                     {
-                       // val nextType = t.pointer
-                        val idxTail = indexes.tail
-                        if(idxTail.size > 0)
+
+                        if(prevPtrTypeList.length - t.levels >= 0)
                         {
-                            if(prevPtrTypeList.length - t.levels >= 0)
-                            {
-                                return getResultType(prevPtrTypeList(prevPtrTypeList.length - t.levels), idxTail, List())
-                            }
-                            else
-                            {
-                                return L_OpaqueType() //Type error has occured
-                            }                            
+                            ptype = prevPtrTypeList(prevPtrTypeList.length - t.levels)
+                            prevPtrTypeList = List()
                         }
                         else
                         {
-                            if(prevPtrTypeList.length - t.levels >= 0)
-                            {
-                                return prevPtrTypeList(prevPtrTypeList.length - t.levels)
-                            }
-                            else
-                            {
-                                return L_OpaqueType() //Type error has occured
-                            }
-                        }
+                            return L_OpaqueType() //Type error has occured
+                        }                            
+                        
                     }
                     else
                     {
                         L_OpaqueType() //Type error has occured
                     }
-                }
-                case _ => 
+                } 
+                case _ => {}
+            }
+            
+            
+            if(indexes.size <= 0)
+            {
+                L_OpaqueType() //Type Error Has Occured
+            }
+            else
+            {
+                ptype match
                 {
-                    L_OpaqueType() //Type error has occured
+                    case t : L_ArrayType =>
+                    {
+                        val nextType = t.elementType
+                        val idxTail = indexes.tail
+                        if(idxTail.size > 0)
+                        {
+                            getResultType(nextType, idxTail, prevPtrTypeList ::: List(t))
+                        }
+                        else
+                        {
+                            nextType match
+                            {
+                                case t : L_UpReferenceType => dereferenceUpRef(t, prevPtrTypeList)
+                                case _ => L_PointerType(nextType)
+                            }
+                        }
+                    }
+                    case t : L_VectorType =>
+                    {
+                        val nextType = t.elementType
+                        val idxTail = indexes.tail
+                        if(idxTail.size > 0)
+                        {
+                            getResultType(nextType, idxTail, prevPtrTypeList ::: List(t))
+                        }
+                        else
+                        {
+                            nextType match
+                            {
+                                case t : L_UpReferenceType => dereferenceUpRef(t, prevPtrTypeList)
+                                case _ => L_PointerType(nextType)
+                            }
+                        }
+                    }
+                    case t : L_PointerType =>
+                    {
+                        val nextType = t.pointer
+                        val idxTail = indexes.tail
+                        if(idxTail.size > 0)
+                        {
+                            getResultType(nextType, idxTail, prevPtrTypeList ::: List(t))
+                        }
+                        else
+                        {
+                            nextType match
+                            {
+                                case t : L_UpReferenceType => dereferenceUpRef(t, prevPtrTypeList)
+                                case _ => L_PointerType(nextType)
+                            }
+                        }
+                    }
+                    case t : L_StructureType =>
+                    {
+                        indexes.head match
+                        {
+                            case c : L_Int =>
+                            {
+                                val nextType = t.fields(c.value.toInt) 			// We can convert this to an int because
+                                                                                // a structure with more than max_int fields
+                                                                                // is ludicrously large  - and useless - the 
+                                                                                // source code would have to define over max_int 
+                                                                                // fields one by one!
+                                val idxTail = indexes.tail
+                                if(idxTail.size > 0)
+                                {
+                                    getResultType(nextType, idxTail, prevPtrTypeList ::: List(t))
+                                }
+                                else
+                                {
+                                    nextType match
+                                    {
+                                        case t : L_UpReferenceType => dereferenceUpRef(t, prevPtrTypeList)
+                                        case _ => L_PointerType(nextType)
+                                    }
+                                }
+                            }
+                            case _ =>
+                            {
+                                L_OpaqueType() //Type error has occured
+                            }
+                        }					
+                    }
+                    case t : L_PackedStructureType =>
+                    {
+                        indexes.head match
+                        {
+                            case c : L_Int =>
+                            {
+                                val nextType = t.fields(c.value.toInt) 			// We can convert this to an int because
+                                                                                // a structure with more than max_int fields
+                                                                                // is ludicrously large  - and useless - the 
+                                                                                // source code would have to define over max_int 
+                                                                                // fields one by one!
+                                val idxTail = indexes.tail
+                                if(idxTail.size > 0)
+                                {
+                                    getResultType(nextType, idxTail, prevPtrTypeList ::: List(t))
+                                }
+                                else
+                                {
+                                    nextType match
+                                    {
+                                        case t : L_UpReferenceType => dereferenceUpRef(t, prevPtrTypeList)
+                                        case _ => L_PointerType(nextType)
+                                    }
+                                }
+                            }
+                            case _ =>
+                            {
+                                L_OpaqueType() //Type error has occured
+                            }
+                        }					
+                    }
+                    case _ => 
+                    {
+                        L_OpaqueType() //Type error has occured
+                    }
                 }
-                
             }
         }
     }
@@ -748,14 +831,19 @@ object IRTree {
             case n : L_Int            => L_IntType(n.size)
             case n : L_Float          => L_FloatType()
             case n : L_Double         => L_DoubleType()
+            case n : L_FP128          => L_FP128Type()
+            case n : L_X86FP80        => L_X86FP80Type()
+            case n : L_PPCFP128       => L_PPCFP128Type()
+    
             case n : L_NullPointer    => L_PointerType(n.pty)
             case n : L_Void           => L_VoidType()
             
             //COMPLEX CONSTANTS
-            case n : L_Structure      => L_StructureType(n.elements.map(e => e->resultType))
-            case n : L_Array          => L_ArrayType(n.elements.size, n.elements.head->resultType)
-            case n : L_String         => L_ArrayType(n.s.size - (n.s.filter(c => (c == '\\')).size * 2), L_IntType(8))
-            case n : L_Vector         => L_VectorType(n.elements.size, n.elements.head->resultType)
+            case n : L_Structure       => L_StructureType(n.elements.map(e => e->resultType))
+            case n : L_PackedStructure => L_PackedStructureType(n.elements.map(e => e->resultType))
+            case n : L_Array           => L_ArrayType(n.elements.size, n.elements.head->resultType)
+            case n : L_String          => L_ArrayType(n.s.size - (n.s.filter(c => (c == '\\')).size * 2), L_IntType(8))
+            case n : L_Vector          => L_VectorType(n.elements.size, n.elements.head->resultType)
             case n : L_ZeroInitialiser => n.typ
             
             //BINARY OPERATOR INSTRUCTIONS
@@ -843,8 +931,8 @@ object IRTree {
             case n : L_Bitcast        => n.targetType
             
             //OTHER OPERATIONS
-            case n : L_ICmp           => L_IntType(1)
-            /*
+            case n : L_ICMP           => L_IntType(1)
+            /* Removed and simplified
             case n : L_ICmpEQ         => L_IntType(1)
             case n : L_ICmpNE         => L_IntType(1)
             case n : L_ICmpNEQ        => L_IntType(1)
@@ -857,8 +945,8 @@ object IRTree {
             case n : L_ICmpSLT        => L_IntType(1)
             case n : L_ICmpSLE        => L_IntType(1)
             */
-            case n : L_FCmp           => L_IntType(1)
-            /*
+            case n : L_FCMP           => L_IntType(1)
+            /* Removed and simplified
             case n : L_FCmpFalse      => L_IntType(1)
             case n : L_FCmpOEQ        => L_IntType(1)
             case n : L_FCmpOGT        => L_IntType(1)
@@ -926,11 +1014,11 @@ object IRTree {
             }
             
             //AGGREGATE OPERATIONS - TODO : will require testing
-            case n : L_ExtractValue   =>// L_VoidType() //TODO : Fix to match the type extracted from the aggregate structure
+            case n : L_ExtractValue   => //Match the type extracted from the aggregate structure
             {
                 if(n.indexes.size == 0)
                 {
-                    L_VoidType() //Type error
+                    L_OpaqueType() //Type error
                 }
                 else
                 {
@@ -940,8 +1028,9 @@ object IRTree {
                         out match
                         {
                             case n2 : L_ArrayType     => out = n2.elementType
-                            case n2 : L_StructureType => out = n2.fields.apply(idx.value.toInt)
-                            case _                    => out = L_VoidType() //Type error
+                            case n2 : L_StructureType => out = n2.fields.apply(idx.value.toInt)       //TODO : Error handling for index out of bounds
+                            case n2 : L_PackedStructureType => out = n2.fields.apply(idx.value.toInt) //TODO : Error handling for index out of bounds
+                            case _                    => out = L_OpaqueType() //Type error
                         }
                     }
                     out
@@ -953,7 +1042,7 @@ object IRTree {
             case n : L_Argument => n.ty
             
             case n : L_GlobalVariable => (n.value)->resultType
-            case _ => L_VoidType() //Type error
+            case _ => L_OpaqueType() //Type error
         }
     }	
 }

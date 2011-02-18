@@ -86,6 +86,14 @@ class ConstantSpec extends Spec {
           emitTest(addinstr)
         }
       }
+      it("L_Boolean implicit conversion")
+      {
+        expect("%0 = add i1 1, 0")
+        {
+          val addinstr = L_Add(true, false)
+          emitTest(addinstr)
+        }
+      }
       it("L_Int")
       {
         expect("%0 = add i33 16, 0")
@@ -132,7 +140,52 @@ class ConstantSpec extends Spec {
           emitTest(L_FAdd(L_Double("1.0"), L_Double("2.0"))) 
         }
       }
-      
+      it("L_FP128")
+      {
+        expect("%0 = fadd fp128 1.0, 2.0")
+        {
+          emitTest(L_FAdd(L_FP128("1.0"), L_FP128("2.0")))
+        }
+      }
+      it("L_X86FP80")
+      {
+        expect("%0 = fadd x86fp80 1.0, 2.0")
+        {
+          emitTest(L_FAdd(L_X86FP80("1.0"), L_X86FP80("2.0")))
+        }
+      }
+      it("L_PPCFP128")
+      {
+        expect("%0 = fadd ppcfp128 1.0, 2.0")
+        {
+          emitTest(L_FAdd(L_PPCFP128("1.0"), L_PPCFP128("2.0")))
+        }
+      }
+      it("L_String")
+      {
+        expect("%0 = add [12 x i8] c" + '"' + "String Test\\00" + '"' + ", 0")
+        {
+          emitTest(L_Add(L_String("String Test\\00"), 0))
+        }
+      }     
+      it("L_ZeroInitialiser")
+      {
+        expect("%0 = add i8 zeroinitializer, zeroinitializer")
+        {
+          emitTest(L_Add(L_ZeroInitialiser(L_IntType(8)), L_ZeroInitialiser(L_IntType(8))))
+        }
+      }
+      it("L_Array")
+      {
+        expect("%0 = add [3 x i32] [ i32 0, i32 1, i32 2 ], [ i32 0, i32 1, i32 2 ]")
+        {
+          val v1 : Int = 0
+          val v2 : Int = 1
+          val v3 : Int = 2
+          val myarray = L_Array(List(v1, v2, v3))
+          emitTest(L_Add(myarray, myarray))
+        }
+      }      
     }
     
 }

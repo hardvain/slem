@@ -131,6 +131,14 @@ class MemOpSpec extends Spec {
             typeTest(L_GetElementPtr(mystr->resultType, mystr, List(0, 2)))
         }
       }
+      it("L_GetElementPtr - packed structure type test")
+      {
+        expect("i16*")
+        {
+            val mystr = L_Alloca(L_PackedStructureType(List(L_IntType(64), L_IntType(32), L_IntType(16))))
+            typeTest(L_GetElementPtr(mystr->resultType, mystr, List(0, 2)))
+        }
+      }
       it("L_GetElementPtr - nested structure type test")
       {
         expect("i16*")
@@ -139,11 +147,27 @@ class MemOpSpec extends Spec {
             typeTest(L_GetElementPtr(mystr->resultType, mystr, List(0, 0, 2)))
         }
       }
+      it("L_GetElementPtr - nested packed structure type test")
+      {
+        expect("i16*")
+        {
+            val mystr = L_Alloca(L_PackedStructureType(List(L_PackedStructureType(List(L_IntType(64), L_IntType(32), L_IntType(16))), L_IntType(128))))
+            typeTest(L_GetElementPtr(mystr->resultType, mystr, List(0, 0, 2)))
+        }
+      }
       it("L_GetElementPtr - nested structure type test 2")
       {
         expect("i128*")
         {
             val mystr = L_Alloca(L_StructureType(List(L_StructureType(List(L_IntType(64), L_IntType(32), L_IntType(16))), L_IntType(128))))
+            typeTest(L_GetElementPtr(mystr->resultType, mystr, List(0, 1)))
+        }
+      }
+      it("L_GetElementPtr - nested packed structure type test 2")
+      {
+        expect("i128*")
+        {
+            val mystr = L_Alloca(L_PackedStructureType(List(L_PackedStructureType(List(L_IntType(64), L_IntType(32), L_IntType(16))), L_IntType(128))))
             typeTest(L_GetElementPtr(mystr->resultType, mystr, List(0, 1)))
         }
       }
@@ -171,7 +195,144 @@ class MemOpSpec extends Spec {
             typeTest(L_GetElementPtr(mystr->resultType, mystr, List(0, 0, 0, 1)))
         }
       }
-      
+      it("L_GetElementPtr - array/vector/packed structure type test")
+      {
+        expect("i64*")
+        {
+            val mystr = L_Alloca(L_ArrayType(5, L_VectorType(50, L_PackedStructureType(List(L_IntType(16), L_IntType(64))))))
+            typeTest(L_GetElementPtr(mystr->resultType, mystr, List(0, 0, 0, 1)))
+        }
+      }
+      it("L_GetElementPtr - structure non-const index type test")
+      {
+        expect("opaque")
+        {
+            val nonint = L_Add(1, 2)
+            val mystr = L_Alloca(L_ArrayType(5, L_VectorType(50, L_StructureType(List(L_IntType(16), L_IntType(64))))))
+            typeTest(L_GetElementPtr(mystr->resultType, mystr, List(0, 0, 0, nonint)))
+        }
+      }
+      it("L_GetElementPtr - packed structure non-const index type test")
+      {
+        expect("opaque")
+        {
+            val nonint = L_Add(1, 2)
+            val mystr = L_Alloca(L_ArrayType(5, L_VectorType(50, L_PackedStructureType(List(L_IntType(16), L_IntType(64))))))
+            typeTest(L_GetElementPtr(mystr->resultType, mystr, List(0, 0, 0, nonint)))
+        }
+      }
+      it("L_GetElementPtr - array type test")
+      {
+        expect("i64*")
+        {
+            val mystr = L_Alloca(L_ArrayType(5, L_IntType(64)))
+            typeTest(L_GetElementPtr(mystr->resultType, mystr, List(0, 1)))
+        }
+      }
+      it("L_GetElementPtr - simple pointer")
+      {
+        expect("i64*")
+        {
+            val mystr = L_Alloca(L_IntType(64))
+            typeTest(L_GetElementPtr(mystr->resultType, mystr, List(0)))
+        }
+      }
+      it("L_GetElementPtr - empty index list")
+      {
+        expect("opaque")
+        {
+            val mystr = L_Alloca(L_IntType(64))
+            typeTest(L_GetElementPtr(mystr->resultType, mystr, List()))
+        }
+      }      
+      it("L_GetElementPtr - upreference")
+      {
+        expect("[5 x [6 x \\2]]*")
+        {
+            val mystr = L_Alloca(L_ArrayType(5, L_ArrayType(6, L_UpReferenceType(2))))
+            typeTest(L_GetElementPtr(mystr->resultType, mystr, List(0,0,0)))
+        }
+      } 
+      it("L_GetElementPtr - upreference test 2")
+      {
+        expect("[5 x \\2]*")
+        {
+            val mystr = L_Alloca(L_ArrayType(5, L_UpReferenceType(2)))
+            typeTest(L_GetElementPtr(mystr->resultType, mystr, List(0,0,0)))
+        }
+      }  
+      it("L_GetElementPtr - upreference test 3")
+      {
+        expect("\\1*")
+        {
+            val mystr = L_Alloca(L_ArrayType(5, L_UpReferenceType(1)))
+            typeTest(L_GetElementPtr(mystr->resultType, mystr, List(0,0,0,0,0,0)))
+        }
+      }
+      it("L_GetElementPtr - upreference test 4")
+      {
+        expect("\\1*")
+        {
+            val mystr = L_Alloca(L_VectorType(5, L_UpReferenceType(1)))
+            typeTest(L_GetElementPtr(mystr->resultType, mystr, List(0,0)))
+        }
+      }
+      it("L_GetElementPtr - upreference test 5")
+      {
+        expect("\\1*")
+        {
+            val mystr = L_Alloca(L_StructureType(List(L_UpReferenceType(1))))
+            typeTest(L_GetElementPtr(mystr->resultType, mystr, List(0,0)))
+        }
+      }  
+      it("L_GetElementPtr - upreference test 6")
+      {
+        expect("\\1*")
+        {
+            val mystr = L_Alloca(L_PackedStructureType(List(L_UpReferenceType(1))))
+            typeTest(L_GetElementPtr(mystr->resultType, mystr, List(0,0)))
+        }
+      } 
+      it("L_GetElementPtr - upreference test 7")
+      {
+        expect("\\1*")
+        {
+            val mystr = L_Alloca(L_PointerType(L_UpReferenceType(1)))
+            typeTest(L_GetElementPtr(mystr->resultType, mystr, List(0, 0)))
+        }
+      }   
+      it("L_GetElementPtr - upreference test 8")
+      {
+        expect("opaque")
+        {
+            val mystr = L_Alloca(L_PointerType(L_UpReferenceType(10)))
+            typeTest(L_GetElementPtr(mystr->resultType, mystr, List(0, 0)))
+        }
+      }  
+      it("L_GetElementPtr - upreference test 9")
+      {
+        expect("opaque")
+        {
+            val mystr = L_Alloca(L_PointerType(L_UpReferenceType(-1)))
+            typeTest(L_GetElementPtr(mystr->resultType, mystr, List(0, 0)))
+        }
+      }    
+      it("L_GetElementPtr - upreference test 10")
+      {
+        expect("opaque")
+        {
+            val mystr = L_Alloca(L_ArrayType(5, L_UpReferenceType(10)))
+            typeTest(L_GetElementPtr(mystr->resultType, mystr, List(0,0,0)))
+        }
+      }    
+      it("L_GetElementPtr - upreference test 11")
+      {
+        expect("opaque")
+        {
+            val mystr = L_Alloca(L_ArrayType(5, L_UpReferenceType(-1)))
+            typeTest(L_GetElementPtr(mystr->resultType, mystr, List(0,0,0)))
+        }
+      }         
     }
     
     

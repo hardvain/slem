@@ -287,6 +287,11 @@ class IRTreeEncoder(emitter : Emitter)
             {
                 emit(n.value)
             }
+            
+            case n : L_FP128          => emit(n.value)
+            case n : L_X86FP80        => emit(n.value)
+            case n : L_PPCFP128       => emit(n.value)
+            
             /* No such thing as a pointer constant except for null ptr
             case n : L_Pointer =>
             {
@@ -304,6 +309,24 @@ class IRTreeEncoder(emitter : Emitter)
             {
             }
             //Complex Constants
+            case n : L_PackedStructure =>
+            {
+                emit("< { ")
+                var imax = n.elements.size
+                var i = 1
+                for(e<-n.elements)
+                {
+                    encodeType(e->resultType)
+                    emit(" ")
+                    encodeValue(e)
+                    if(i < imax)
+                    {
+                        emit(", ")
+                    }
+                    i = i + 1
+                }
+                emit(" } >")
+            }
             case n : L_Structure =>
             {
                 emit("{ ")
@@ -336,6 +359,7 @@ class IRTreeEncoder(emitter : Emitter)
                     {
                         emit(", ")
                     }
+                    i = i + 1
                 }
                 emit(" ]")
             }
@@ -345,7 +369,7 @@ class IRTreeEncoder(emitter : Emitter)
             }
             case n : L_ZeroInitialiser =>
             {
-                emit("zeroinitialiser")
+                emit("zeroinitializer")
             }
             case n : L_Vector =>
             {
@@ -1067,7 +1091,7 @@ class IRTreeEncoder(emitter : Emitter)
                 }
                 emit(" }")
             }
-            case n : L_PackagedStructureType =>
+            case n : L_PackedStructureType =>
             {
                 emit("< { ")
                 var imax = n.fields.size
@@ -1127,7 +1151,7 @@ class IRTreeEncoder(emitter : Emitter)
         encodeValue(g.value)
         if(g.section.size > 0)
         {
-            emit(", section " + g.section)
+            emit(", section " + '"' + g.section + '"')
         }
         if(g.alignment != 0)
         {
