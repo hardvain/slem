@@ -467,7 +467,7 @@ object IRTree {
                     }
                     else
                     {
-                        L_OpaqueType() //Type error has occured
+                        return L_OpaqueType() //Type error has occured
                     }
                 } 
                 case _ => {}
@@ -886,7 +886,7 @@ object IRTree {
                     case p : L_PointerType => p.pointer
                     case _ => 
                     {
-                        L_VoidType() //Error
+                        L_OpaqueType() //Type Error
                     }
                 }
             }
@@ -972,7 +972,7 @@ object IRTree {
                 }
                 else
                 {
-                    L_VoidType()
+                    L_OpaqueType() //Type Error
                 }
             }
             case n : L_Select         => (n.val1)->resultType
@@ -1006,10 +1006,10 @@ object IRTree {
                             {
                                 L_VectorType(v2.numElements, v.elementType)
                             }
-                            case _ => L_VoidType()
+                            case _ => L_OpaqueType() //Type Error
                         }
                     }
-                    case _ => L_VoidType() //Type Error
+                    case _ => L_OpaqueType() //Type Error
                 }
             }
             
@@ -1023,14 +1023,63 @@ object IRTree {
                 else
                 {
                     var out = (n.value)->resultType
+                    var prevTypes : List[L_Type] = List()
                     for(idx <- n.indexes)
                     {
                         out match
                         {
-                            case n2 : L_ArrayType     => out = n2.elementType
-                            case n2 : L_StructureType => out = n2.fields.apply(idx.value.toInt)       //TODO : Error handling for index out of bounds
-                            case n2 : L_PackedStructureType => out = n2.fields.apply(idx.value.toInt) //TODO : Error handling for index out of bounds
-                            case _                    => out = L_OpaqueType() //Type error
+                            case n2 : L_UpReferenceType =>
+                            {
+                                if(n2.levels == 1)
+                                {
+                                    //Do nothing - self referential up-reference
+                                }
+                                if(n2.levels > 1)
+                                {
+                                    if(prevTypes.length - n2.levels >= 0)
+                                    {
+                                        out = prevTypes(prevTypes.length - n2.levels)
+                                        prevTypes = List()
+                                    }
+                                    else
+                                    {
+                                        out = L_OpaqueType() // Type Error
+                                    }
+                                }
+                                else
+                                {
+                                    out = L_OpaqueType() // Type Error
+                                }
+                            }
+                            case _ =>
+                        }
+                        prevTypes = prevTypes ::: List(out)
+                        out match
+                        {
+                            case n2 : L_ArrayType      => out = n2.elementType
+                            case n2 : L_StructureType  => 
+                            {
+                                if(n2.fields.size > idx.value.toInt)
+                                {
+                                    out = n2.fields.apply(idx.value.toInt)
+                                }
+                                else
+                                {
+                                    out = L_OpaqueType() //Type Error
+                                }
+                            }
+                            case n2 : L_PackedStructureType => 
+                            {
+                                if(n2.fields.size > idx.value.toInt)
+                                {
+                                    out = n2.fields.apply(idx.value.toInt)
+                                }
+                                else
+                                {
+                                    out = L_OpaqueType() //Type Error
+                                } 
+                            }
+                            case _  => out = L_OpaqueType() //Type error
                         }
                     }
                     out

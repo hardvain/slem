@@ -262,12 +262,37 @@ class OtherOpSpec extends Spec {
         binTest(L_Phi(List(vlab1, vlab2, vlab3)))
       }
     }
+    it("L_Phi - TypeTest") {
+      expect("i32")
+      {
+        val lab1 = L_Label("label1")
+        val lab2 = L_Label("label2")
+        val lab3 = L_Label("label3")
+        val vlab1 = L_ValueLabel(1, lab1)
+        val vlab2 = L_ValueLabel(2, lab2)
+        val vlab3 = L_ValueLabel(3, lab3)
+        typeTest(L_Phi(List(vlab1, vlab2, vlab3)))
+      }
+    } 
+    it("L_Phi - TypeTest 2") {
+      expect("opaque")
+      {
+        typeTest(L_Phi(List()))
+      }
+    } 
+    
   }
   describe("Select :") {
     it("L_Select"){
       expect("%0 = select i1 1, i8 2, i8 3")
       {
         binTest(L_Select(L_Int(1,1), L_Int(8, 2), L_Int(8, 3)))
+      }
+    }
+    it("L_Select - Type Test"){
+      expect("i8")
+      {
+        typeTest(L_Select(L_Int(1,1), L_Int(8, 2), L_Int(8, 3)))
       }
     }
   }
@@ -279,12 +304,23 @@ class OtherOpSpec extends Spec {
         binTest(L_Call(L_IntType(32), myfunc, List(L_Int(32, 1)), callConvention = "cconvtest", returnAttributes = List("retattrstest", "retattrstest2"), fnattrs = List("attrstest", "attrstest2")))
       }      
     }
+    it("L_Call - Type Test") {
+      expect("i32")
+      {
+        val myfunc = L_FunctionDeclaration(L_IntType(32), funcName = "myfunc", arguments = List(L_IntType(32)))
+        typeTest(L_Call(L_IntType(32), myfunc, List(L_Int(32, 1)), callConvention = "cconvtest", returnAttributes = List("retattrstest", "retattrstest2"), fnattrs = List("attrstest", "attrstest2")))
+      }      
+    }
   }
   describe("Va_Arg :") {
       it("L_Va_Arg") {
       expect("%0 = va_arg i8 1, i32")
       {
         binTest(L_Va_Arg(L_Int(8, 1), L_IntType(32)))  
+      }
+      expect("i32")
+      {
+        typeTest(L_Va_Arg(L_Int(8, 1), L_IntType(32)))  
       }
     }
   }

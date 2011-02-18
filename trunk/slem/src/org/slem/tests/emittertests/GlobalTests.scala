@@ -87,6 +87,15 @@ class GlobalVariableSpec extends Spec {
           globalTest(myglob)
         }
       }
+      it("L_GlobalVariable - Type Test")
+      {
+        expect("float")
+        {
+          val myconst = L_Float("1.0")
+          val myglob = L_GlobalVariable(myconst, isConstant = true, addressSpace = 5, section = "foo", alignment = 4, linkage = "internal")
+          typeTest(myglob->resultType)
+        }      
+      }
     }
     
 }
