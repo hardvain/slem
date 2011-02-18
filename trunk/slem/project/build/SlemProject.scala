@@ -5,8 +5,9 @@
  */
 
 import sbt._
+import reaktor.scct.ScctProject
 
-class SlemProject (info: ProjectInfo) extends DefaultProject (info)
+class SlemProject (info: ProjectInfo) extends DefaultProject (info) with ScctProject
 {
     // Configure paths
     override def mainScalaSourcePath = "src"

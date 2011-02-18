@@ -294,7 +294,7 @@ object IRTree {
         override val instructionString = "udiv"
     }
     
-    case class L_ExactUDiv(LHSin : L_Value, RHS : L_Value) extends L_BinOpInstruction(LHSin, RHSin)
+    case class L_ExactUDiv(LHSin : L_Value, RHSin : L_Value) extends L_BinOpInstruction(LHSin, RHSin)
     {
         override val instructionString = "udiv exact"
     }
@@ -843,6 +843,8 @@ object IRTree {
             case n : L_Bitcast        => n.targetType
             
             //OTHER OPERATIONS
+            case n : L_ICmp           => L_IntType(1)
+            /*
             case n : L_ICmpEQ         => L_IntType(1)
             case n : L_ICmpNE         => L_IntType(1)
             case n : L_ICmpNEQ        => L_IntType(1)
@@ -854,6 +856,9 @@ object IRTree {
             case n : L_ICmpSGE        => L_IntType(1)
             case n : L_ICmpSLT        => L_IntType(1)
             case n : L_ICmpSLE        => L_IntType(1)
+            */
+            case n : L_FCmp           => L_IntType(1)
+            /*
             case n : L_FCmpFalse      => L_IntType(1)
             case n : L_FCmpOEQ        => L_IntType(1)
             case n : L_FCmpOGT        => L_IntType(1)
@@ -869,6 +874,7 @@ object IRTree {
             case n : L_FCmpUNE        => L_IntType(1)
             case n : L_FCmpUNO        => L_IntType(1)
             case n : L_FCmpTrue       => L_IntType(1)
+            */
             case n : L_Phi            =>
             {
                 if(n.valueLabels.size > 0)
