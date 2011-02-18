@@ -14,3 +14,5 @@
 }}}
 
 Global variables can be defined with just a value, but can also optionally contain information such as the address space, whether the variable is constant, section, alignmnet, variable name and linkage, embedded using the corresponding optional parameters.
+
+Refer to the LLVM Assembly Language Reference Manual - [http://llvm.org/docs/LangRef.html#globalvars Global Variables]
