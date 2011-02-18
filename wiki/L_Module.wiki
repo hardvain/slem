@@ -4,3 +4,5 @@
 case class L_Module(globals : List[L_Global]) extends L_Node
 }}}
 A LLVM Module in SLEM is defined as a list of [L_Global globals].
+
+Refer to the LLVM Assembly Language Reference Manual - [http://llvm.org/docs/LangRef.html#modulestructure Module Structure]
