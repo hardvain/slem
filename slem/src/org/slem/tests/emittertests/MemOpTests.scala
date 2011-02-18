@@ -82,7 +82,15 @@ class MemOpSpec extends Spec {
           val stor = L_Store(myPtr, 1)
           emitTest(L_Load(L_PointerType(L_IntType(32)), myPtr, alignment = 5, isVolatile = true))
         }
-      }    
+      } 
+      it("L_Load - non-pointer type test - throw type error") {
+        expect("opaque")
+        {
+          val myPtr = L_Alloca(L_IntType(32))
+          val stor = L_Store(myPtr, 1)
+          typeTest(L_Load(L_IntType(32), myPtr, alignment = 5, isVolatile = true))
+        }
+      }       
     }
     
     
@@ -332,7 +340,15 @@ class MemOpSpec extends Spec {
             val mystr = L_Alloca(L_ArrayType(5, L_UpReferenceType(-1)))
             typeTest(L_GetElementPtr(mystr->resultType, mystr, List(0,0,0)))
         }
-      }         
+      }   
+      it("L_GetElementPtr - wrong type test")
+      {
+        expect("opaque")
+        {
+            val mystr = 1.0
+            typeTest(L_GetElementPtr(mystr->resultType, mystr, List(0,0,0)))
+        }
+      }        
     }
     
     

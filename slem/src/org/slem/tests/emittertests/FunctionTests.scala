@@ -50,7 +50,13 @@ class FunctionSpec extends Spec {
 		encoder.encodeType(instr->resultType)
 		e.result
 	}	
-    
+	private def typeTestBasic(typ : L_Type) : String =
+	{
+	    val e = new StringEmitter()
+		val encoder = new IRTreeEncoder(e)
+		encoder.encodeType(typ)
+		e.result
+	}	    
     describe("Function Declarations: ") {
       
       it("full fn test") {
@@ -115,6 +121,27 @@ class FunctionSpec extends Spec {
                 garbageCollector = "gctest"
             )
             emitFuncDefTest(myfunc)        
+        }
+      }
+      it("full fn test - with named arguments - Type test") {
+        expect("i64( i32, i64 )*")
+        {
+            val myBlock = L_Block(List(L_Add(1,2)), L_Ret(0))
+            val myfunc = L_FunctionDefinition(
+                L_IntType(64),
+                List(myBlock),
+                funcName = "myFunc",
+                arguments = List(L_Argument(L_IntType(32), argName = "moo1"), L_Argument(L_IntType(64), argName = "moo2")),
+                linkage = "linktest",
+                visibilityStyle = "vistest",
+                callConvention = "cctest",
+                returnAttributes = List("retattrs1", "retattrs2"),
+                funcAttributes = List("fnattr1", "fnattr2"),
+                section = "sectiontest",
+                alignment = 5,  
+                garbageCollector = "gctest"
+            )
+            typeTestBasic(myfunc->resultType)        
         }
       }
       

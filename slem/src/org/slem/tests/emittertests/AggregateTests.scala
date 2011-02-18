@@ -84,6 +84,12 @@ class AggregateSpec extends Spec {
           val mystr = L_Structure(List(1, L_Structure(List(1.0, 1))))
           val etest1 = typeTest(L_ExtractValue(mystr, List(1))->resultType)
           etest1
+        } 
+        expect("opaque")
+        {
+          val mystr = L_Structure(List(1, L_Structure(List(1.0))))
+          val etest1 = typeTest(L_ExtractValue(mystr, List(999))->resultType)
+          etest1
         }         
       }
       it("L_ExtractValue - Packed Structure Type Test") {
@@ -116,7 +122,13 @@ class AggregateSpec extends Spec {
           val mystr = L_PackedStructure(List(1, L_PackedStructure(List(1.0, 1))))
           val etest1 = typeTest(L_ExtractValue(mystr, List(1))->resultType)
           etest1
-        }         
+        }
+        expect("opaque")
+        {
+          val mystr = L_PackedStructure(List(1, L_PackedStructure(List(1.0))))
+          val etest1 = typeTest(L_ExtractValue(mystr, List(999))->resultType)
+          etest1
+        }        
       }
       it("L_ExtractValue - Array Type Test") {
         expect("i32") 

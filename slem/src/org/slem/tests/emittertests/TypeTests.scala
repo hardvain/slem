@@ -89,6 +89,22 @@ class TypeSpec extends Spec {
           typeTest(oty)
         }
       }
+      it("Va_Arg type")
+      {
+        expect("...")
+        {
+          val vty = L_VarArgsType()
+          typeTest(vty)
+        }
+      }
+      it("Label type")
+      {
+        expect("label")
+        {
+          val vty = L_LabelType()
+          typeTest(vty)
+        }
+      }
     }
     
 }
