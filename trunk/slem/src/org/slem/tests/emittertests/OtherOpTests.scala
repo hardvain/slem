@@ -144,6 +144,12 @@ class OtherOpSpec extends Spec {
 	    binTest(L_ICmpSLE(1,2))
 	  }
     }
+    it("L_ICmp Result Type") {
+      expect("i1")
+      {
+        typeTest(L_ICmpSLE(1,2))
+      }
+    }
   }
   describe("FCMP - Basic") {
     it("L_FCmpFalse") {
@@ -234,6 +240,12 @@ class OtherOpSpec extends Spec {
       expect("%0 = fcmp true float 1.0, 2.0")
       {
         binTest(L_FCmpTrue(L_Float("1.0"), L_Float("2.0")))
+      }
+    }
+    it("L_FCmp Result Type") {
+      expect("i1")
+      {
+        typeTest(L_FCmpOEQ(1,2))
       }
     }
   }

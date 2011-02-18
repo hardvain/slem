@@ -171,6 +171,12 @@ class BinopSpec extends Spec {
 	  { 
 	    binTest(L_UDiv(1,2))
 	  }
+    } 
+    it("L_ExactUDiv") {
+      expect("%0 = udiv exact i32 1, 2") 
+	  { 
+	    binTest(L_ExactUDiv(1,2))
+	  }
     } 	
     it("L_SDiv") {
       expect("%0 = sdiv i32 1, 2") 
@@ -214,16 +220,46 @@ class BinopSpec extends Spec {
 	    binTest(L_Shl(1,2))
 	  }
     } 
+    it("L_NUWShl") {
+      expect("%0 = shl nuw i32 1, 2") 
+	  { 
+	    binTest(L_NUWShl(1,2))
+	  }
+    } 
+    it("L_NSWShl") {
+      expect("%0 = shl nsw i32 1, 2") 
+	  { 
+	    binTest(L_NSWShl(1,2))
+	  }
+    } 
+    it("L_NUWNSWShl") {
+      expect("%0 = shl nuw nsw i32 1, 2") 
+	  { 
+	    binTest(L_NUWNSWShl(1,2))
+	  }
+    } 
     it("L_LShr") {
       expect("%0 = lshr i32 1, 2") 
 	  { 
 	    binTest(L_LShr(1,2))
+	  }
+    } 
+    it("L_ExactLShr") {
+      expect("%0 = lshr exact i32 1, 2") 
+	  { 
+	    binTest(L_ExactLShr(1,2))
 	  }
     } 	
     it("L_AShr") {
       expect("%0 = ashr i32 1, 2") 
 	  { 
 	    binTest(L_AShr(1,2))
+	  }
+    } 
+    it("L_ExactAShr") {
+      expect("%0 = ashr exact i32 1, 2") 
+	  { 
+	    binTest(L_ExactAShr(1,2))
 	  }
     } 
     it("L_And") {

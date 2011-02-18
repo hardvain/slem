@@ -27,7 +27,7 @@ import org.slem.IRTreeEncoder
 import org.kiama.util.Console
 import org.kiama.util.StringEmitter
  
-class TypeSpec extends Spec {
+class GlobalVariableSpec extends Spec {
 
     def emitTest(instr : L_Instruction) : String = 
     {
@@ -69,24 +69,22 @@ class TypeSpec extends Spec {
         e.result
     }
     
-    describe("Type - up reference ") {
-      it("L_UpReferenceType")
-      {
-        expect("\\5")
-        {
-          val urty = L_UpReferenceType(5)
-          typeTest(urty)
-        }
-      }
+    def globalTest(glob : L_Global) : String =
+    {
+        val e = new StringEmitter()
+        val encoder = new IRTreeEncoder(e)
+        encoder.encodeGlobal(glob)
+        e.result
     }
     
-    describe("Basic Types") {
-      it("Opaque Type")
+    describe("GlobalVariableTest 1 ") {
+      it("L_GlobalVariable")
       {
-        expect("opaque")
+        expect("@G0 = internal addrspace(5) constant float 1.0, section " + '"' + "foo" + '"' + ", align 4\n\n")
         {
-          val oty = L_OpaqueType()
-          typeTest(oty)
+          val myconst = L_Float("1.0")
+          val myglob = L_GlobalVariable(myconst, isConstant = true, addressSpace = 5, section = "foo", alignment = 4, linkage = "internal")
+          globalTest(myglob)
         }
       }
     }
