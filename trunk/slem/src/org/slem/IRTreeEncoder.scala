@@ -410,8 +410,8 @@ class IRTreeEncoder(emitter : Emitter)
     {
         v match
         {
-            case n : L_Instruction => emit(n->ssa)
             case n : L_Argument => emit(n->paramName)
+            case n : L_Instruction => emit(n->ssa)
             case n : L_GlobalVariable => emit(n->gvarname)
             case n : L_Constant => encodeConstant(n)
             case n : L_FunctionReference => encodeValue(n.funcPtr)
