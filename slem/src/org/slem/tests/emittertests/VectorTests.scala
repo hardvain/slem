@@ -71,10 +71,10 @@ class VectorSpec extends Spec {
 	    }
       }  
       it("L_ExtractElement - Type Error Test") {
-        expect("double") 
+        expect("opaque") 
 	    {  
           val myvec = 1.0
-          val etest1 = typeTest(myvec->resultType)
+          val etest1 = typeTest(L_ExtractElement(myvec, 0)->resultType)
           etest1
 	    }
       }       

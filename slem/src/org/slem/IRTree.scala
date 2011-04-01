@@ -423,9 +423,9 @@ object IRTree {
             }
             else if(upref.levels > 1)
             {
-                if(prevPtrTypeList.length - upref.levels >= 0)
+                if(prevPtrTypeList.length - upref.levels + 1 >= 0)
                 {
-                    return prevPtrTypeList(prevPtrTypeList.length - upref.levels)
+                    return L_PointerType(prevPtrTypeList(prevPtrTypeList.length - upref.levels + 1))
                 }
                 else
                 {
@@ -443,6 +443,7 @@ object IRTree {
             var ptype = ptypein
             var prevPtrTypeList = prevPtrTypeListin
             //Dereference any type up-references:
+            /*
             ptype match
             {
                 case t : L_UpReferenceType =>
@@ -472,6 +473,7 @@ object IRTree {
                 } 
                 case _ => {}
             }
+            */
             
             
             if(indexes.size <= 0)
@@ -988,7 +990,7 @@ object IRTree {
                 vecType match
                 {
                     case v : L_VectorType => v.elementType
-                    case _ => L_VoidType() //Type error
+                    case _ => L_OpaqueType() //Type error
                 }
             }
             case n : L_InsertElement  => (n.vec)->resultType
@@ -1016,43 +1018,18 @@ object IRTree {
             //AGGREGATE OPERATIONS - TODO : will require testing
             case n : L_ExtractValue   => //Match the type extracted from the aggregate structure
             {
+                
                 if(n.indexes.size == 0)
                 {
                     L_OpaqueType() //Type error
                 }
                 else
                 {
+                    
                     var out = (n.value)->resultType
                     var prevTypes : List[L_Type] = List()
                     for(idx <- n.indexes)
                     {
-                        out match
-                        {
-                            case n2 : L_UpReferenceType =>
-                            {
-                                if(n2.levels == 1)
-                                {
-                                    //Do nothing - self referential up-reference
-                                }
-                                if(n2.levels > 1)
-                                {
-                                    if(prevTypes.length - n2.levels >= 0)
-                                    {
-                                        out = prevTypes(prevTypes.length - n2.levels)
-                                        prevTypes = List()
-                                    }
-                                    else
-                                    {
-                                        out = L_OpaqueType() // Type Error
-                                    }
-                                }
-                                else
-                                {
-                                    out = L_OpaqueType() // Type Error
-                                }
-                            }
-                            case _ =>
-                        }
                         prevTypes = prevTypes ::: List(out)
                         out match
                         {
@@ -1081,6 +1058,36 @@ object IRTree {
                             }
                             case _  => out = L_OpaqueType() //Type error
                         }
+                    }
+                    out match
+                    {
+                        case n2 : L_UpReferenceType =>                               
+                        {
+
+                            if(n2.levels == 1)
+                            {
+
+                                //Do nothing - self referential up-reference
+                            }
+                            else if(n2.levels > 1)
+                            {
+                                if(prevTypes.length - n2.levels + 1 >= 0)
+                                {                            
+                                    out = L_PointerType(prevTypes(prevTypes.length - n2.levels + 1))
+                                    prevTypes = List()
+                                }
+                                else
+                                {
+                                    out = L_OpaqueType() // Type Error
+                                }
+                            }
+                            else
+                            {
+                                println("level > 0")
+                                out = L_OpaqueType() // Type Error
+                            }
+                        }
+                        case _ => {}
                     }
                     out
                 }
