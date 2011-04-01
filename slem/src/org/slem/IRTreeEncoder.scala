@@ -730,8 +730,14 @@ class IRTreeEncoder(emitter : Emitter)
             }
             case n : L_Call =>
             {
-                emit(n->ssa)
-                emit(" = ")
+                n.typ match 
+                {
+                    case L_VoidType() => {}
+                    case _ => {
+                        emit(n -> ssa)
+                        emit(" = ")
+                    }
+                }
                 if(n.tail)
                 {
                     emitw("tail")
@@ -870,8 +876,14 @@ class IRTreeEncoder(emitter : Emitter)
             }
             case n : L_Invoke =>
             {
-                emit(n->ssa)
-                emit(" = invoke ")
+                n.typ match {
+                    case L_VoidType() => {}
+                    case _ => {
+                        emit(n -> ssa)
+                        emit(" = ")
+                    }
+                }
+                emit("invoke ")
                 if(n.callConv.size > 0)
                 {
                     emit(n.callConv)
