@@ -721,8 +721,6 @@ object IRTree {
     case class L_FCmpOGE(LHSin : L_Value, RHSin : L_Value) extends L_FCMP(LHSin, RHSin, "oge")
         
     case class L_FCmpOLT(LHSin : L_Value, RHSin : L_Value) extends L_FCMP(LHSin, RHSin, "olt")
-    
-    case class L_FCmpOLE(LHSin : L_Value, RHSin : L_Value) extends L_FCMP(LHSin, RHSin, "ole")
         
     case class L_FCmpONE(LHSin : L_Value, RHSin : L_Value) extends L_FCMP(LHSin, RHSin, "one")
         
@@ -1095,7 +1093,6 @@ object IRTree {
                 }
             }
             case n : L_InsertValue    => (n.value)->resultType
-            
             
             case n : L_Argument => n.ty
             

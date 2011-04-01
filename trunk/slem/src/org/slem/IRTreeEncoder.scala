@@ -730,14 +730,8 @@ class IRTreeEncoder(emitter : Emitter)
             }
             case n : L_Call =>
             {
-                n.typ match 
-                {
-                    case L_VoidType() => {}
-                    case _ => {
-                        emit(n -> ssa)
-                        emit(" = ")
-                    }
-                }
+                emit(n->ssa)
+                emit(" = ")
                 if(n.tail)
                 {
                     emitw("tail")
@@ -765,7 +759,7 @@ class IRTreeEncoder(emitter : Emitter)
                     {
                         case fref : L_FunctionReference =>
                         {
-                            encodeType(fref.funcPtr->resultType)  
+                           encodeType(fref.funcPtr->resultType)  
                         }
                         case _ =>
                         {
@@ -886,14 +880,8 @@ class IRTreeEncoder(emitter : Emitter)
             }
             case n : L_Invoke =>
             {
-                n.typ match {
-                    case L_VoidType() => {}
-                    case _ => {
-                        emit(n -> ssa)
-                        emit(" = ")
-                    }
-                }
-                emit("invoke ")
+                emit(n->ssa)
+                emit(" = invoke ")
                 if(n.callConv.size > 0)
                 {
                     emit(n.callConv)
@@ -909,17 +897,7 @@ class IRTreeEncoder(emitter : Emitter)
                 }
                 else
                 {
-                    n.fnptrval match
-                    {
-                        case fref : L_FunctionReference =>
-                        {
-                           encodeType(fref.funcPtr->resultType)  
-                        }
-                        case _ =>
-                        {
-                            encodeType(n.fnptrval->resultType)                       
-                        }
-                    }
+                    encodeType(n.funcPtrVal->resultType)
                 }
                 emit(" ")
                 encodeValue(n.funcPtrVal)
