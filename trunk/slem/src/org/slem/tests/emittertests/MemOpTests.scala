@@ -255,7 +255,7 @@ class MemOpSpec extends Spec {
       }      
       it("L_GetElementPtr - upreference")
       {
-        expect("[5 x [6 x \\3]]*")
+        expect("[5 x [6 x \\3*]]**")
         {
             val mystr = L_Alloca(L_ArrayType(5, L_ArrayType(6, L_UpReferenceType(3))))
             typeTest(L_GetElementPtr(mystr->resultType, mystr, List(0,0,0)))
@@ -263,7 +263,7 @@ class MemOpSpec extends Spec {
       } 
       it("L_GetElementPtr - upreference test 2")
       {
-        expect("[5 x \\2]*")
+        expect("[5 x \\2*]**")
         {
             val mystr = L_Alloca(L_ArrayType(5, L_UpReferenceType(2)))
             typeTest(L_GetElementPtr(mystr->resultType, mystr, List(0,0)))
@@ -279,7 +279,7 @@ class MemOpSpec extends Spec {
       }
       it("L_GetElementPtr - upreference test 4")
       {
-        expect("\\1*")
+        expect("\\1**")
         {
             val mystr = L_Alloca(L_VectorType(5, L_UpReferenceType(1)))
             typeTest(L_GetElementPtr(mystr->resultType, mystr, List(0,0)))
@@ -287,7 +287,7 @@ class MemOpSpec extends Spec {
       }
       it("L_GetElementPtr - upreference test 5")
       {
-        expect("\\1*")
+        expect("\\1**")
         {
             val mystr = L_Alloca(L_StructureType(List(L_UpReferenceType(1))))
             typeTest(L_GetElementPtr(mystr->resultType, mystr, List(0,0)))
@@ -295,7 +295,7 @@ class MemOpSpec extends Spec {
       }  
       it("L_GetElementPtr - upreference test 6")
       {
-        expect("\\1*")
+        expect("\\1**")
         {
             val mystr = L_Alloca(L_PackedStructureType(List(L_UpReferenceType(1))))
             typeTest(L_GetElementPtr(mystr->resultType, mystr, List(0,0)))
@@ -303,7 +303,7 @@ class MemOpSpec extends Spec {
       } 
       it("L_GetElementPtr - upreference test 7")
       {
-        expect("\\1*")
+        expect("\\1**")
         {
             val mystr = L_Alloca(L_PointerType(L_UpReferenceType(1)))
             typeTest(L_GetElementPtr(mystr->resultType, mystr, List(0, 0)))

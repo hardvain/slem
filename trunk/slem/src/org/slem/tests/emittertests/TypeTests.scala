@@ -72,7 +72,7 @@ class TypeSpec extends Spec {
     describe("Type - up reference ") {
       it("L_UpReferenceType")
       {
-        expect("\\5")
+        expect("\\5*")
         {
           val urty = L_UpReferenceType(5)
           typeTest(urty)

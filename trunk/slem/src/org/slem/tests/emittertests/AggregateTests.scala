@@ -173,7 +173,7 @@ class AggregateSpec extends Spec {
 	    } 
       }
       it("L_ExtractValue - Upreference Type Test") {
-        expect("{ \\2, i32 }*") 
+        expect("{ \\2*, i32 }*") 
 	    {  
           val mystrtype = L_StructureType(List(L_UpReferenceType(2), L_IntType(32)))
           val allocated = L_Alloca(mystrtype)
