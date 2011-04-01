@@ -730,8 +730,27 @@ class IRTreeEncoder(emitter : Emitter)
             }
             case n : L_Call =>
             {
-                emit(n->ssa)
-                emit(" = ")
+                //Void function call patch - issue 2
+                if(n.typ != null)
+                {
+                    n.typ match {
+                        case L_VoidType() => {}
+                        case _ => {
+                            emit(n -> ssa)
+                            emit(" = ")
+                        }
+                    }
+                }
+                else
+                {
+                    n.fnptrval->resultType match {
+                        case L_VoidType() => {}
+                        case _ => {
+                            emit(n -> ssa)
+                            emit(" = ")
+                        }
+                    }                    
+                }
                 if(n.tail)
                 {
                     emitw("tail")
@@ -880,8 +899,28 @@ class IRTreeEncoder(emitter : Emitter)
             }
             case n : L_Invoke =>
             {
-                emit(n->ssa)
-                emit(" = invoke ")
+                //Void function call patch - issue 2
+                if(n.funcTypePtr != null)
+                {
+                    n.funcTypePtr match {
+                      case L_VoidType() => {}
+                      case _ => {
+                        emit(n -> ssa)
+                        emit(" = ")
+                      }
+                    }
+                }
+                else
+                {
+                    n.funcPtrVal->resultType match {
+                      case L_VoidType() => {}
+                      case _ => {
+                        emit(n -> ssa)
+                        emit(" = ")
+                      }
+                    }
+                }
+                emit("invoke ")
                 if(n.callConv.size > 0)
                 {
                     emit(n.callConv)
