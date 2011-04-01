@@ -639,7 +639,14 @@ class IRTreeEncoder(emitter : Emitter)
                 {
                     emit("inbounds ")
                 }
-                encodeType(n.pty)
+                if(n.pty != null)
+                {
+                    encodeType(n.pty)
+                }
+                else
+                {
+                    encodeType(n.pval->resultType)
+                }
                 emit(" ")
                 encodeValue(n.pval)
                 for(ti<-n.typeIndexes)
@@ -1124,7 +1131,7 @@ class IRTreeEncoder(emitter : Emitter)
             }
             case n : L_UpReferenceType =>
             {
-                emit("\\" + n.levels)
+                emit("\\" + n.levels + "*")
             }
             case _ => "Unknown Type : " + t
         }

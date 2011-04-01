@@ -255,9 +255,9 @@ class MemOpSpec extends Spec {
       }      
       it("L_GetElementPtr - upreference")
       {
-        expect("[5 x [6 x \\2]]*")
+        expect("[5 x [6 x \\3]]*")
         {
-            val mystr = L_Alloca(L_ArrayType(5, L_ArrayType(6, L_UpReferenceType(2))))
+            val mystr = L_Alloca(L_ArrayType(5, L_ArrayType(6, L_UpReferenceType(3))))
             typeTest(L_GetElementPtr(mystr->resultType, mystr, List(0,0,0)))
         }
       } 
@@ -266,12 +266,12 @@ class MemOpSpec extends Spec {
         expect("[5 x \\2]*")
         {
             val mystr = L_Alloca(L_ArrayType(5, L_UpReferenceType(2)))
-            typeTest(L_GetElementPtr(mystr->resultType, mystr, List(0,0,0)))
+            typeTest(L_GetElementPtr(mystr->resultType, mystr, List(0,0)))
         }
       }  
       it("L_GetElementPtr - upreference test 3")
       {
-        expect("\\1*")
+        expect("opaque")
         {
             val mystr = L_Alloca(L_ArrayType(5, L_UpReferenceType(1)))
             typeTest(L_GetElementPtr(mystr->resultType, mystr, List(0,0,0,0,0,0)))
