@@ -978,11 +978,26 @@ object IRTree {
                 }
             }
             case n : L_Select         => (n.val1)->resultType
-            case n : L_Call           => n.typ //TODO : Check this.
+            case n : L_Call           => 
+            {
+                if(n.typ != null)
+                {
+                    n.typ
+                }
+                else
+                {
+                    n.fnptrval->resultType
+                }
+            }
 
             case n : L_Va_Arg         => n.argType
-            case n : L_Invoke         => n.funcTypePtr
-            
+            case n : L_Invoke         => 
+            {   
+                if(n.funcTypePtr != null)
+                    n.funcTypePtr
+                else
+                    n.funcPtrVal->resultType
+            }
             //VECTOR OPERATIONS
             case n : L_ExtractElement => 
             {
