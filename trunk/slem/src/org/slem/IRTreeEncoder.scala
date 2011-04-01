@@ -761,7 +761,17 @@ class IRTreeEncoder(emitter : Emitter)
                 }
                 else
                 {
-                    encodeType(n.fnptrval->resultType)
+                    n.fnptrval match
+                    {
+                        case fref : L_FunctionReference =>
+                        {
+                            encodeType(fref.funcPtr->resultType)  
+                        }
+                        case _ =>
+                        {
+                            encodeType(n.fnptrval->resultType)                       
+                        }
+                    }
                 }
                 emit(" ")
                 
@@ -899,7 +909,17 @@ class IRTreeEncoder(emitter : Emitter)
                 }
                 else
                 {
-                    encodeType(n.funcPtrVal->resultType)
+                    n.fnptrval match
+                    {
+                        case fref : L_FunctionReference =>
+                        {
+                           encodeType(fref.funcPtr->resultType)  
+                        }
+                        case _ =>
+                        {
+                            encodeType(n.fnptrval->resultType)                       
+                        }
+                    }
                 }
                 emit(" ")
                 encodeValue(n.funcPtrVal)
